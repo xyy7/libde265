@@ -34,7 +34,8 @@
 #include <QtGui>
 #ifdef HAVE_SWSCALE
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #include <libswscale/swscale.h>
 #ifdef __cplusplus
@@ -45,7 +46,6 @@ extern "C" {
 #include "VideoWidget.hh"
 #include "de265.h"
 
-
 class VideoDecoder : public QThread
 {
   Q_OBJECT
@@ -54,10 +54,10 @@ public:
   VideoDecoder();
   ~VideoDecoder();
 
-  void init(const char* filename);
+  void init(const char *filename);
 
 protected:
-  void run();  // thread entry point
+  void run(); // thread entry point
 
 public slots:
   void startDecoder();
@@ -76,53 +76,53 @@ public slots:
   void showDecodedImage(bool flag);
 
 signals:
-  void displayImage(QImage*);
+  void displayImage(QImage *);
 
 private:
   // de265 decoder
 
-  FILE* mFH;
-  //input_context_FILE inputctx;
-  //rbsp_buffer buf;
-  de265_decoder_context* ctx;
-  const de265_image* img;
+  FILE *mFH;
+  // input_context_FILE inputctx;
+  // rbsp_buffer buf;
+  de265_decoder_context *ctx;
+  const de265_image *img;
 
   QMutex mutex;
 
   QImage mImgBuffers[2];
-  int    mNextBuffer;
-  int    mFrameCount;
+  int mFrameIndex;
+  int mNextBuffer;
+  int mFrameCount;
 
-  bool   mPlayingVideo;
-  bool   mVideoEnded;
-  bool   mSingleStep;
+  bool mPlayingVideo;
+  bool mVideoEnded;
+  bool mSingleStep;
 
-
-  bool   mShowDecodedImage;
-  bool   mShowQuantPY;
-  bool   mCBShowPartitioning;
-  bool   mTBShowPartitioning;
-  bool   mPBShowPartitioning;
-  bool   mShowIntraPredMode;
-  bool   mShowPBPredMode;
-  bool   mShowMotionVec;
-  bool   mShowTiles;
-  bool   mShowSlices;
+  bool mShowDecodedImage;
+  bool mShowQuantPY;
+  bool mCBShowPartitioning;
+  bool mTBShowPartitioning;
+  bool mPBShowPartitioning;
+  bool mShowIntraPredMode;
+  bool mShowPBPredMode;
+  bool mShowMotionVec;
+  bool mShowTiles;
+  bool mShowSlices;
 
   void decoder_loop();
 
-  void init_decoder(const char* filename);
+  void init_decoder(const char *filename);
   void free_decoder();
 
-  void show_frame(const de265_image* img);
+  void show_frame(const de265_image *img, const char *filename = "test.png");
 #ifdef HAVE_VIDEOGFX
-  void convert_frame_libvideogfx(const de265_image* img, QImage & qimg);
+  void convert_frame_libvideogfx(const de265_image *img, QImage &qimg);
 #endif
 #ifdef HAVE_SWSCALE
-  SwsContext* sws;
+  SwsContext *sws;
   int width;
   int height;
-  void convert_frame_swscale(const de265_image* img, QImage & qimg);
+  void convert_frame_swscale(const de265_image *img, QImage &qimg);
 #endif
 };
 

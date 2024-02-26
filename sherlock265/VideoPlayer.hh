@@ -32,20 +32,19 @@
 #include "VideoWidget.hh"
 #include "VideoDecoder.hh"
 
-
 class VideoPlayer : public QWidget
 {
   Q_OBJECT
 
 public:
-  VideoPlayer(const char* filename);
+  VideoPlayer(const char *filename);
 
 private:
-  VideoWidget* videoWidget;
+  VideoWidget *videoWidget;
   QPushButton *startButton;
   QPushButton *stopButton;
 
-  VideoDecoder* mDecoder;
+  VideoDecoder *mDecoder;
 };
 
 #endif
