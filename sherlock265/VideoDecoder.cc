@@ -39,6 +39,29 @@ using namespace videogfx;
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <sys/time.h>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+
+extern std::mutex myMutex;
+extern std::condition_variable cv;
+extern bool a_done;
+extern bool c_done;
+
+void print_current_time()
+{
+  struct timeval tv;
+  struct tm *info;
+  char buffer[80];
+
+  gettimeofday(&tv, NULL);
+  info = localtime(&tv.tv_sec);
+
+  strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", info);
+  printf("Current time: %s.%06ld\n", buffer, tv.tv_usec);
+}
+
 void create_directory(const char *filename)
 {
   // 检查当前目录是否存在指定的文件夹
@@ -47,12 +70,12 @@ void create_directory(const char *filename)
   {
     // 如果不存在，则创建文件夹
     mkdir(filename, 0700);
-    printf("Created directory: %s\n", filename);
+    // printf("Created directory: %s\n", filename);
   }
-  else
-  {
-    printf("Directory '%s' already exists\n", filename);
-  }
+  // else
+  // {
+  //   printf("Directory '%s' already exists\n", filename);
+  // }
 }
 
 VideoDecoder::VideoDecoder()
@@ -123,89 +146,98 @@ void VideoDecoder::stopDecoder()
   mPlayingVideo = false;
 }
 
-void VideoDecoder::singleStepDecoder()
+bool VideoDecoder::singleStepDecoder()
 {
-  if (mPlayingVideo || mVideoEnded)
+  if (mVideoEnded)
   {
-    return;
+    return false;
   }
-
+  if (mPlayingVideo)
+  {
+    return true;
+  }
   mPlayingVideo = true;
   mSingleStep = true;
-  exit();
+  printf("mFrameIndex: %d (from 1)\n", ++mFrameIndex);
+  return true;
 }
 
 void VideoDecoder::decoder_loop()
 {
   mFrameIndex = 0;
+  int count = 0;
   for (;;)
   {
     if (mPlayingVideo)
     {
       mutex.lock();
-
       if (img)
       {
         img = NULL;
-        de265_release_next_picture(ctx); // 释放之前帧
+        de265_release_next_picture(ctx); // 释放之前帧     //img==>NULL
       }
 
-      img = de265_peek_next_picture(ctx); // 获取新的一帧
-      while (img == NULL)                 // 没有新的一帧了，那就等draw函数来更新img
+      img = de265_peek_next_picture(ctx); // 获取新的一帧  //ctx==>img
+      bool prefetch_buf = true;
+      int more = 1;
+      while (img == NULL)
       {
         mutex.unlock();
-        int more = 1;
         de265_error err = de265_decode(ctx, &more);
         mutex.lock();
-        // printf("2step: %d,%d,%d,DE265_OK:%d,ERROR:%d\n", ++step, more, err, DE265_OK, DE265_ERROR_WAITING_FOR_INPUT_DATA);
         if (more && err == DE265_OK)
         {
           // try again to get picture
-          img = de265_peek_next_picture(ctx);
+          img = de265_peek_next_picture(ctx); // ctx==>img
         }
         else if (more && err == DE265_ERROR_WAITING_FOR_INPUT_DATA)
         {
           uint8_t buf[4096];
           int buf_size = fread(buf, 1, sizeof(buf), mFH);
-          // printf("bufsize:%d\n", buf_size);
-          int err = de265_push_data(ctx, buf, buf_size, 0, 0);
+          int err = de265_push_data(ctx, buf, buf_size, 0, 0); // file==>ctx
+
+          if (buf_size == 0)
+          {
+            prefetch_buf = false;
+            mVideoEnded = true;
+          }
         }
-        else if (!more)
+        if (!prefetch_buf && img == NULL)
         {
           mVideoEnded = true;
           mPlayingVideo = false; // TODO: send signal back
-          printf("no more picture!\n");
+          printf("no more picture!++++++++++++++\n");
           break;
         }
       }
 
       // show one decoded picture
-
       if (img)
       {
-        create_directory("rec");
-        char filename[20];
-        sprintf(filename, "rec/%02d.png", mFrameIndex);
-        printf("%s\n", filename);
-        show_frame(img, filename);
-
         if (mSingleStep)
         {
           mSingleStep = false;
           mPlayingVideo = false;
-          printf("step: %d\n", ++mFrameIndex);
         }
       }
-
       mutex.unlock();
-
-      // process events
-
-      QCoreApplication::processEvents(); // 处理QT事件，确保图像的显示和更新。
     }
     else
     {
-      exec(); // 如果等不到mPlayingVdieo信号，那么就循环等待
+      std::unique_lock<std::mutex> lock(myMutex);
+      while (!a_done)
+      {
+        cv.wait(lock);
+      }
+      // exec(); //只能进行单向通信[接收信号]
+      a_done = false;
+      c_done = true;
+      cv.notify_one();
+      if (mVideoEnded)
+      {
+        printf("decoder loop is over!\n");
+        return;
+      }
     }
   }
 }
@@ -388,27 +420,26 @@ void VideoDecoder::show_frame(const de265_image *img, const char *filename)
     draw_Tiles(img, ptr, bpl, 4);
   }
 
-  emit displayImage(qimg);
-  printf("you can save img here!\n");
+  // emit displayImage(qimg);
   qimg->save(filename);
   mNextBuffer = 1 - mNextBuffer;
   mFrameCount++;
-  printf("this is %d frame (drawing).\n", mFrameCount);
+  // printf("this is %d frame (drawing).\n", mFrameCount);
 }
 
 void VideoDecoder::showCBPartitioning(bool flag)
 {
   mCBShowPartitioning = flag;
-
   mutex.lock();
   if (img != NULL)
   {
     create_directory("recCB");
-    char filename[20];
+    char filename[200];
     sprintf(filename, "recCB/CB_%02d.png", mFrameIndex);
     show_frame(img, filename);
   }
   mutex.unlock();
+  mCBShowPartitioning = false;
 }
 
 void VideoDecoder::showTBPartitioning(bool flag)
@@ -419,7 +450,7 @@ void VideoDecoder::showTBPartitioning(bool flag)
   if (img != NULL)
   {
     create_directory("recTB");
-    char filename[20];
+    char filename[200];
     sprintf(filename, "recTB/TB_%02d.png", mFrameIndex);
     show_frame(img, filename);
   }
@@ -434,7 +465,7 @@ void VideoDecoder::showPBPartitioning(bool flag)
   if (img != NULL)
   {
     create_directory("recPB");
-    char filename[20];
+    char filename[200];
     sprintf(filename, "recPB/PB_%02d.png", mFrameIndex);
     show_frame(img, filename);
   }
@@ -449,7 +480,7 @@ void VideoDecoder::showIntraPredMode(bool flag)
   if (img != NULL)
   {
     create_directory("recIntraPredMode");
-    char filename[20];
+    char filename[200];
     sprintf(filename, "recIntraPredMode/IntraPredMode_%02d.png", mFrameIndex);
     show_frame(img, filename);
   }
@@ -464,7 +495,7 @@ void VideoDecoder::showPBPredMode(bool flag)
   if (img != NULL)
   {
     create_directory("recPBPredMode");
-    char filename[20];
+    char filename[200];
     sprintf(filename, "recPBPredMode/PBPred_mode_%02d.png", mFrameIndex);
     show_frame(img, filename);
   }
@@ -479,7 +510,7 @@ void VideoDecoder::showQuantPY(bool flag)
   if (img != NULL)
   {
     create_directory("recQuantPY");
-    char filename[20];
+    char filename[200];
     sprintf(filename, "recQuantPY/QuantPY_%02d.png", mFrameIndex);
     show_frame(img, filename);
   }
@@ -494,7 +525,7 @@ void VideoDecoder::showMotionVec(bool flag)
   if (img != NULL)
   {
     create_directory("recMV");
-    char filename[20];
+    char filename[200];
     sprintf(filename, "recMV/MV_%02d.png", mFrameIndex);
     show_frame(img, filename);
   }
@@ -504,12 +535,16 @@ void VideoDecoder::showMotionVec(bool flag)
 void VideoDecoder::showDecodedImage(bool flag)
 {
   mShowDecodedImage = flag;
+  if (mShowDecodedImage != false)
+  {
+    return;
+  }
 
   mutex.lock();
   if (img != NULL)
   {
     create_directory("recDecodedImage");
-    char filename[20];
+    char filename[200];
     sprintf(filename, "recDecodedImage/DecodedImage_%02d.png", mFrameIndex);
     show_frame(img, filename);
   }
@@ -524,7 +559,7 @@ void VideoDecoder::showTiles(bool flag)
   if (img != NULL)
   {
     create_directory("recTiles");
-    char filename[20];
+    char filename[200];
     sprintf(filename, "recTiles/Tiles_%02d.png", mFrameIndex);
     show_frame(img, filename);
   }
@@ -539,7 +574,7 @@ void VideoDecoder::showSlices(bool flag)
   if (img != NULL)
   {
     create_directory("recSlices");
-    char filename[20];
+    char filename[200];
     sprintf(filename, "recSlices/Slices_%02d.png", mFrameIndex);
     show_frame(img, filename);
   }

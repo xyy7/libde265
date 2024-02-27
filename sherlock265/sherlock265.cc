@@ -26,20 +26,14 @@
 
 #include "VideoPlayer.hh"
 
-
 int main(int argc, char **argv)
 {
-  if (argc != 2) {
-    fprintf(stderr,"usage: sherlock265 videofile.bin\n");
-    fprintf(stderr,"The video file must be a raw h.265 bitstream (e.g. HM-10.0 output)\n");
+  if (argc != 2)
+  {
+    fprintf(stderr, "usage: sherlock265 videofile.bin\n");
+    fprintf(stderr, "The video file must be a raw h.265 bitstream (e.g. HM-10.0 output)\n");
     exit(5);
   }
-
-
-  QApplication app(argc, argv);
-
   VideoPlayer videoPlayer(argv[1]);
-  videoPlayer.show();
-
-  return app.exec();
+  return 0;
 }

@@ -62,7 +62,7 @@ protected:
 public slots:
   void startDecoder();
   void stopDecoder();
-  void singleStepDecoder();
+  bool singleStepDecoder();
 
   void showCBPartitioning(bool flag);
   void showTBPartitioning(bool flag);
@@ -90,9 +90,9 @@ private:
   QMutex mutex;
 
   QImage mImgBuffers[2];
-  int mFrameIndex;
   int mNextBuffer;
   int mFrameCount;
+  int mFrameIndex;
 
   bool mPlayingVideo;
   bool mVideoEnded;

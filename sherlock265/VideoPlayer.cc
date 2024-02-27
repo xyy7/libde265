@@ -25,113 +25,59 @@
 */
 
 #include "VideoPlayer.hh"
+#include <unistd.h>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+
+std::mutex myMutex;
+std::condition_variable cv;
+bool a_done = false;
+bool c_done = false;
 
 VideoPlayer::VideoPlayer(const char *filename)
 {
   mDecoder = new VideoDecoder;
   mDecoder->init(filename);
-
-  videoWidget = new VideoWidget;
-
-  stopButton = new QPushButton("Stop");
-  // QObject::connect(stopButton, SIGNAL(clicked()), qApp, SLOT(stop()));
-  QObject::connect(stopButton, SIGNAL(clicked()), mDecoder, SLOT(stopDecoder()));
-
-  startButton = new QPushButton("&Start");
-  QObject::connect(startButton, SIGNAL(clicked()), mDecoder, SLOT(startDecoder()));
-
-  QPushButton *stepButton = new QPushButton("Step");
-  QObject::connect(stepButton, SIGNAL(clicked()), mDecoder, SLOT(singleStepDecoder()));
-
-  QObject::connect(mDecoder, SIGNAL(displayImage(QImage *)),
-                   videoWidget, SLOT(setImage(QImage *)), Qt::QueuedConnection);
-
-  QPushButton *showCBPartitioningButton = new QPushButton("CB-tree");
-  showCBPartitioningButton->setCheckable(true);
-  QObject::connect(showCBPartitioningButton, SIGNAL(toggled(bool)),
-                   mDecoder, SLOT(showCBPartitioning(bool)));
-
-  QPushButton *showTBPartitioningButton = new QPushButton("TB-tree");
-  showTBPartitioningButton->setCheckable(true);
-  QObject::connect(showTBPartitioningButton, SIGNAL(toggled(bool)),
-                   mDecoder, SLOT(showTBPartitioning(bool)));
-
-  QPushButton *showPBPartitioningButton = new QPushButton("PB-tree");
-  showPBPartitioningButton->setCheckable(true);
-  QObject::connect(showPBPartitioningButton, SIGNAL(toggled(bool)),
-                   mDecoder, SLOT(showPBPartitioning(bool)));
-
-  QPushButton *showIntraPredModeButton = new QPushButton("intra-pred");
-  showIntraPredModeButton->setCheckable(true);
-  QObject::connect(showIntraPredModeButton, SIGNAL(toggled(bool)),
-                   mDecoder, SLOT(showIntraPredMode(bool)));
-
-  QPushButton *showPBPredModeButton = new QPushButton("PB-mode");
-  showPBPredModeButton->setCheckable(true);
-  QObject::connect(showPBPredModeButton, SIGNAL(toggled(bool)),
-                   mDecoder, SLOT(showPBPredMode(bool)));
-
-  QPushButton *showQuantPYButton = new QPushButton("Quant");
-  showQuantPYButton->setCheckable(true);
-  QObject::connect(showQuantPYButton, SIGNAL(toggled(bool)),
-                   mDecoder, SLOT(showQuantPY(bool)));
-
-  QPushButton *showMotionVecButton = new QPushButton("MotionVec");
-  showMotionVecButton->setCheckable(true);
-  QObject::connect(showMotionVecButton, SIGNAL(toggled(bool)),
-                   mDecoder, SLOT(showMotionVec(bool)));
-
-  QPushButton *showTilesButton = new QPushButton("Tiles");
-  showTilesButton->setCheckable(true);
-  QObject::connect(showTilesButton, SIGNAL(toggled(bool)),
-                   mDecoder, SLOT(showTiles(bool)));
-
-  QPushButton *showSlicesButton = new QPushButton("Slices");
-  showSlicesButton->setCheckable(true);
-  QObject::connect(showSlicesButton, SIGNAL(toggled(bool)),
-                   mDecoder, SLOT(showSlices(bool)));
-
-  QPushButton *showDecodedImageButton = new QPushButton("image");
-  showDecodedImageButton->setCheckable(true);
-  showDecodedImageButton->setChecked(true);
-  QObject::connect(showDecodedImageButton, SIGNAL(toggled(bool)),
-                   mDecoder, SLOT(showDecodedImage(bool)));
-
-  QGridLayout *layout = new QGridLayout;
-  layout->addWidget(videoWidget, 0, 0, 1, 7);
-  layout->addWidget(startButton, 1, 0, 1, 1);
-  layout->addWidget(stopButton, 1, 1, 1, 1);
-  layout->addWidget(stepButton, 1, 2, 1, 1);
-  layout->addWidget(showDecodedImageButton, 1, 6, 1, 1);
-  layout->addWidget(showTilesButton, 1, 5, 1, 1);
-  layout->addWidget(showSlicesButton, 1, 4, 1, 1);
-  layout->addWidget(showCBPartitioningButton, 2, 0, 1, 1);
-  layout->addWidget(showTBPartitioningButton, 2, 1, 1, 1);
-  layout->addWidget(showPBPartitioningButton, 2, 2, 1, 1);
-  layout->addWidget(showIntraPredModeButton, 2, 3, 1, 1);
-  layout->addWidget(showPBPredModeButton, 2, 4, 1, 1);
-  layout->addWidget(showQuantPYButton, 2, 5, 1, 1);
-  layout->addWidget(showMotionVecButton, 2, 6, 1, 1);
-  setLayout(layout);
-
   mDecoder->start();
-  // mDecoder->showDecodedImage(false);
+  // mDecoder->showSlices(true); // 似乎不能正确展示
+  // mDecoder->showTiles(true); // 似乎不能正确展示
+  for (;;)
+  {
+    std::unique_lock<std::mutex> lock(myMutex);
 
-  // // mDecoder->showCBPartitioning(true);
-  // // mDecoder->showPBPartitioning(true);
-  // // mDecoder->showTBPartitioning(true);
+    bool err = mDecoder->singleStepDecoder();
+    mDecoder->showCBPartitioning(true); // 绘制是多线程的
+    // mDecoder->showCBPartitioning(false);  //如果在这里修改，那么可能这里执行的速度比绘制的速度快的多，直接给改回来了
+    mDecoder->showPBPartitioning(true);
+    // mDecoder->showPBPartitioning(false);
+    mDecoder->showTBPartitioning(true);
+    // mDecoder->showTBPartitioning(false);
+    mDecoder->showIntraPredMode(true);
+    // mDecoder->showIntraPredMode(false);
+    mDecoder->showPBPredMode(true);
+    // mDecoder->showPBPredMode(false);
+    mDecoder->showMotionVec(true);
+    // mDecoder->showMotionVec(false);
+    mDecoder->showQuantPY(true);
+    // mDecoder->showQuantPY(false);
+    mDecoder->showDecodedImage(true);
 
-  // // mDecoder->showIntraPredMode(true);
-  // // mDecoder->showPBPredMode(true);
+    c_done = false;
+    a_done = true;
+    cv.notify_one();
+    if (err == false)
+    {
+      printf("break all now!\n");
+      break;
+    }
 
-  // // mDecoder->showMotionVec(true);
-  // mDecoder->showQuantPY(true);
-
-  // // mDecoder->showSlices(true); // 似乎不能正确展示
-  // // mDecoder->showTiles(true); // 似乎不能正确展示
-
-  // for (;;)
-  // {
-  //   mDecoder->singleStepDecoder();
-  // }
+    // c_done = false;
+    // a_done = true;
+    // cv.notify_one();
+    while (!c_done)
+    {
+      cv.wait(lock);
+    }
+  }
 }
