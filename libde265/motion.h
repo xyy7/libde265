@@ -29,27 +29,40 @@ class slice_segment_header;
 
 class MotionVector
 {
- public:
-  int16_t x,y;
+public:
+  int16_t x, y;
+  friend std::ostream &operator<<(std::ostream &os, const MotionVector &mv)
+  {
+    os << "x: " << mv.x << ", y: " << mv.y;
+    return os;
+  }
 };
-
 
 class PBMotion
 {
- public:
-  uint8_t predFlag[2];  // which of the two vectors is actually used
-  int8_t  refIdx[2];    // index into RefPicList
-  MotionVector  mv[2];  // the absolute motion vectors
+public:
+  uint8_t predFlag[2]; // which of the two vectors is actually used
+  int8_t refIdx[2];    // index into RefPicList
+  MotionVector mv[2];  // the absolute motion vectors
 
-  bool operator==(const PBMotion&) const;
+  bool operator==(const PBMotion &) const;
+  friend std::ostream &operator<<(std::ostream &os, const PBMotion &pb)
+  {
+    os << "predFlag[0]: " << static_cast<int>(pb.predFlag[0]) << ", "
+       << "predFlag[1]: " << static_cast<int>(pb.predFlag[1]) << ", "
+       << "refIdx[0]: " << static_cast<int>(pb.refIdx[0]) << ", "
+       << "refIdx[1]: " << static_cast<int>(pb.refIdx[1]) << ", "
+       << "mv[0]: " << pb.mv[0] << ", "
+       << "mv[1]: " << pb.mv[1];
+    return os;
+  }
 };
-
 
 class PBMotionCoding
 {
- public:
+public:
   // index into RefPicList
-  int8_t  refIdx[2];
+  int8_t refIdx[2];
 
   // motion vector difference
   int16_t mvd[2][2]; // [L0/L1][x/y]  (only in top left position - ???)
@@ -63,16 +76,15 @@ class PBMotionCoding
 
   // whether merge mode is used
   uint8_t merge_flag : 1;
-  uint8_t merge_idx  : 3;
+  uint8_t merge_idx : 3;
 };
 
-
-void get_merge_candidate_list(base_context* ctx,
-                              const slice_segment_header* shdr,
-                              struct de265_image* img,
-                              int xC,int yC, int xP,int yP,
-                              int nCS, int nPbW,int nPbH, int partIdx,
-                              PBMotion* mergeCandList);
+void get_merge_candidate_list(base_context *ctx,
+                              const slice_segment_header *shdr,
+                              struct de265_image *img,
+                              int xC, int yC, int xP, int yP,
+                              int nCS, int nPbW, int nPbH, int partIdx,
+                              PBMotion *mergeCandList);
 
 /*
 int derive_spatial_merging_candidates(const struct de265_image* img,
@@ -84,48 +96,42 @@ int derive_spatial_merging_candidates(const struct de265_image* img,
                                       int maxCandidates);
 */
 
-void generate_inter_prediction_samples(base_context* ctx,
-                                       const slice_segment_header* shdr,
-                                       struct de265_image* img,
-                                       int xC,int yC,
-                                       int xB,int yB,
-                                       int nCS, int nPbW,int nPbH,
-                                       const PBMotion* vi);
-
+void generate_inter_prediction_samples(base_context *ctx,
+                                       const slice_segment_header *shdr,
+                                       struct de265_image *img,
+                                       int xC, int yC,
+                                       int xB, int yB,
+                                       int nCS, int nPbW, int nPbH,
+                                       const PBMotion *vi);
 
 /* Fill list (two entries) of motion-vector predictors for MVD coding.
  */
-void fill_luma_motion_vector_predictors(base_context* ctx,
-                                        const slice_segment_header* shdr,
-                                        de265_image* img,
-                                        int xC,int yC,int nCS,int xP,int yP,
-                                        int nPbW,int nPbH, int l,
+void fill_luma_motion_vector_predictors(base_context *ctx,
+                                        const slice_segment_header *shdr,
+                                        de265_image *img,
+                                        int xC, int yC, int nCS, int xP, int yP,
+                                        int nPbW, int nPbH, int l,
                                         int refIdx, int partIdx,
                                         MotionVector out_mvpList[2]);
 
-
-void decode_prediction_unit(base_context* ctx,const slice_segment_header* shdr,
-                            de265_image* img, const PBMotionCoding& motion,
-                            int xC,int yC, int xB,int yB, int nCS, int nPbW,int nPbH, int partIdx);
-
-
-
+void decode_prediction_unit(base_context *ctx, const slice_segment_header *shdr,
+                            de265_image *img, const PBMotionCoding &motion,
+                            int xC, int yC, int xB, int yB, int nCS, int nPbW, int nPbH, int partIdx);
 
 class MotionVectorAccess
 {
 public:
-  virtual enum PartMode get_PartMode(int x,int y) const = 0;
-  virtual const PBMotion& get_mv_info(int x,int y) const = 0;
+  virtual enum PartMode get_PartMode(int x, int y) const = 0;
+  virtual const PBMotion &get_mv_info(int x, int y) const = 0;
 };
 
-
-void get_merge_candidate_list_without_step_9(base_context* ctx,
-                                             const slice_segment_header* shdr,
-                                             const MotionVectorAccess& mvaccess,
-                                             de265_image* img,
-                                             int xC,int yC, int xP,int yP,
-                                             int nCS, int nPbW,int nPbH, int partIdx,
+void get_merge_candidate_list_without_step_9(base_context *ctx,
+                                             const slice_segment_header *shdr,
+                                             const MotionVectorAccess &mvaccess,
+                                             de265_image *img,
+                                             int xC, int yC, int xP, int yP,
+                                             int nCS, int nPbW, int nPbH, int partIdx,
                                              int max_merge_idx,
-                                             PBMotion* mergeCandList);
+                                             PBMotion *mergeCandList);
 
 #endif

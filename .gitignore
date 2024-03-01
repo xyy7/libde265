@@ -19,6 +19,13 @@ configure
 *.la
 de265-config.h
 libde265.pc
+.vscode
+build
+sherlock265-bak
+*.png
+rec*/
+*log*
+*bak*
 
 # MSVC
 *.sln

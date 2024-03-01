@@ -210,12 +210,14 @@ void VideoDecoder::decoder_loop()
           break;
         }
       }
-
+      printf("img == NULL ? %d", img == NULL);
       // show one decoded picture
       if (img)
       {
+
         if (mSingleStep)
         {
+          img->get_all_metadata();
           mSingleStep = false;
           mPlayingVideo = false;
         }
@@ -588,7 +590,8 @@ void VideoDecoder::init_decoder(const char *filename)
   // rbsp_buffer_init(&buf);
 
   ctx = de265_new_decoder();
-  de265_start_worker_threads(ctx, 4); // start 4 background threads
+  // de265_start_worker_threads(ctx, 4); // start 4 background threads
+  de265_start_worker_threads(ctx, 0); // start 4 background threads
 }
 
 void VideoDecoder::free_decoder()
