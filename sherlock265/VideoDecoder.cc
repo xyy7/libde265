@@ -217,7 +217,7 @@ void VideoDecoder::decoder_loop()
 
         if (mSingleStep)
         {
-          img->get_all_metadata();
+          // img->get_all_metadata();
           mSingleStep = false;
           mPlayingVideo = false;
         }
