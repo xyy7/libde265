@@ -49,7 +49,7 @@ extern std::condition_variable cv;
 extern bool a_done;
 extern bool c_done;
 
-void print_current_time()
+void print_current_time(const char *extra)
 {
   struct timeval tv;
   struct tm *info;
@@ -59,7 +59,7 @@ void print_current_time()
   info = localtime(&tv.tv_sec);
 
   strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", info);
-  printf("Current time: %s.%06ld\n", buffer, tv.tv_usec);
+  printf("Current time: %s.%06ld %s\n", buffer, tv.tv_usec, extra);
 }
 
 void create_directory(const char *filename)
@@ -148,6 +148,7 @@ void VideoDecoder::stopDecoder()
 
 bool VideoDecoder::singleStepDecoder()
 {
+
   if (mVideoEnded)
   {
     return false;
@@ -164,7 +165,6 @@ bool VideoDecoder::singleStepDecoder()
 
 void VideoDecoder::decoder_loop()
 {
-  mFrameIndex = 0;
   int count = 0;
   for (;;)
   {
@@ -210,7 +210,7 @@ void VideoDecoder::decoder_loop()
           break;
         }
       }
-      printf("img == NULL ? %d", img == NULL);
+      // printf("img == NULL ? %d", img == NULL);
       // show one decoded picture
       if (img)
       {
@@ -226,15 +226,9 @@ void VideoDecoder::decoder_loop()
     }
     else
     {
-      std::unique_lock<std::mutex> lock(myMutex);
-      while (!a_done)
-      {
-        cv.wait(lock);
-      }
-      // exec(); //只能进行单向通信[接收信号]
-      a_done = false;
-      c_done = true;
+      std::unique_lock<std::mutex> lock(myMutex); // 相当于myMutex.lock()
       cv.notify_one();
+      cv.wait(lock);
       if (mVideoEnded)
       {
         printf("decoder loop is over!\n");

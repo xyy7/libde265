@@ -32,8 +32,8 @@
 
 std::mutex myMutex;
 std::condition_variable cv;
-bool a_done = false;
-bool c_done = false;
+bool a_done;
+bool c_done;
 
 VideoPlayer::VideoPlayer(const char *filename)
 {

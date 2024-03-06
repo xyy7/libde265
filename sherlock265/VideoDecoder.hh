@@ -78,7 +78,8 @@ public slots:
 signals:
   void displayImage(QImage *);
 
-private:
+  // private:
+public:
   // de265 decoder
 
   FILE *mFH;
@@ -92,7 +93,7 @@ private:
   QImage mImgBuffers[2];
   int mNextBuffer;
   int mFrameCount;
-  int mFrameIndex;
+  int mFrameIndex = 0;
 
   bool mPlayingVideo;
   bool mVideoEnded;
