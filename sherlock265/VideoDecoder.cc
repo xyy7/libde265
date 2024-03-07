@@ -227,8 +227,16 @@ void VideoDecoder::decoder_loop()
     else
     {
       std::unique_lock<std::mutex> lock(myMutex); // 相当于myMutex.lock()
+      // printf("c lock playing video %d \n", mPlayingVideo);
+      c_done = true;
+      a_done = false;
       cv.notify_one();
-      cv.wait(lock);
+
+      while (!a_done)
+      {
+        // printf("c unlock playing video %d \n", mPlayingVideo);
+        cv.wait(lock);
+      }
       if (mVideoEnded)
       {
         printf("decoder loop is over!\n");

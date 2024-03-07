@@ -47,18 +47,26 @@ extern "C"
             bool err = mDecoder->singleStepDecoder();
 
             std::unique_lock<std::mutex> lock(myMutex); // 相当于myMutex.lock()
+            // printf("a lock playing video %d \n", mDecoder->mPlayingVideo);
+            a_done = true;
+            c_done = false;
+
             cv.notify_one();
             if (err == false)
             {
                 printf("break all now!\n");
                 break;
             }
-            cv.wait(lock); // 相当于myMutex.unlock()+sleep()
+            while (!c_done)
+            {
+                // printf("a unlock playing video %d \n", mDecoder->mPlayingVideo);
+                cv.wait(lock); // 相当于myMutex.unlock()+sleep()
+            }
             printf("I have collected %d decodedImg.!!!\n", ++decodedImgCount);
         }
         // TODO: 需要进行深拷贝
         printf("I have collected %d decodedImg.!!!\n", decodedImgCount);
-        delete mDecoder;
+        // delete mDecoder;
     }
 
     int main(int argc, char **argv)

@@ -3,9 +3,11 @@
 # 返回每一帧
 # 返回一个列表
 
+import gc
 import os
 from ctypes import *
 
+gc.disable()
 sotest = cdll.LoadLibrary("/data/chenminghui/test265/sherlock265/libgetCTBinfo.so")
 
 # sotest.print_msg("hello,my shared object used by python!")
