@@ -96,7 +96,7 @@ public:
   // rbsp_buffer buf;
   de265_decoder_context *ctx;
   const de265_image *img;
-  int decodedImage[100];
+  // int decodedImage[100];sh
 
   QMutex mutex;
 

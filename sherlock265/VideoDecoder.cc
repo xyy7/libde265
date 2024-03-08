@@ -243,7 +243,6 @@ void VideoDecoder::decoder_loop()
       if (mVideoEnded)
       {
         printf("decoder loop is over!\n");
-        quit();
         return;
       }
     }
