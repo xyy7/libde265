@@ -1,3 +1,6 @@
+cd ../libde265
+make -j 8 
+cd ../sherlock265
 make -j 8
 sh make-debug.sh
 ./getCTBinfo

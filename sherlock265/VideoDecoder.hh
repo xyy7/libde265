@@ -46,7 +46,16 @@ extern "C"
 #include "VideoWidget.hh"
 #include "de265.h"
 
-class VideoDecoder : public QThread
+class MyThread : public QThread
+{
+public:
+  ~MyThread()
+  {
+    printf("destructor in mythread!*****************\n");
+  }
+};
+
+class VideoDecoder : public MyThread
 {
   Q_OBJECT
 
@@ -87,6 +96,7 @@ public:
   // rbsp_buffer buf;
   de265_decoder_context *ctx;
   const de265_image *img;
+  int decodedImage[100];
 
   QMutex mutex;
 

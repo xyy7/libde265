@@ -66,7 +66,9 @@ extern "C"
         }
         // TODO: 需要进行深拷贝
         printf("I have collected %d decodedImg.!!!\n", decodedImgCount);
-        // delete mDecoder;
+        mDecoder->wait();
+        delete mDecoder;
+        printf("everything is over\n");
     }
 
     int main(int argc, char **argv)
