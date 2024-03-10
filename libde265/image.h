@@ -85,7 +85,7 @@ enum PictureState
 class decoder_context;
 
 template <class DataUnit>
-class MetaDataArray
+struct MetaDataArray
 {
 public:
   MetaDataArray()
@@ -402,7 +402,7 @@ struct de265_image
                blkSize, get_image_stride(cIdx));
   }
 
-private:
+  // private:
   uint32_t ID;
   static uint32_t s_next_image_ID;
 
@@ -458,7 +458,7 @@ public:
 
   int number_of_ctbs() const { return ctb_info.size(); }
 
-private:
+  // private:
   // The image also keeps a reference to VPS/SPS/PPS, because when decoding is delayed,
   // the currently active parameter sets in the decctx might already have been replaced
   // with new parameters.
@@ -540,7 +540,7 @@ public:
      All CTB's processing states are set to 'unprocessed'.
   */
   void clear_metadata();
-  void get_all_metadata() const
+  void get_all_metadata()
   {
     printf("nThreadsQueued:%d,nThreadsRunning:%d,nThreadsBlocked:%d,nThreadsFinished:%d,nThreadsTotal:%d\n", nThreadsQueued, nThreadsRunning, nThreadsBlocked, nThreadsFinished, nThreadsTotal);
     printf("BitDepth_Y:%d,BitDepth_C:%d,SubWidthC:%d,SubHeightC:%d\n", BitDepth_Y, BitDepth_C, SubWidthC, SubHeightC);

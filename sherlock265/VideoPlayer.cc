@@ -34,6 +34,8 @@ std::mutex myMutex;
 std::condition_variable cv;
 bool a_done;
 bool c_done;
+de265_image *decodedImg[100];
+int decodedImgCount;
 
 VideoPlayer::VideoPlayer(const char *filename)
 {

@@ -48,6 +48,8 @@ extern std::mutex myMutex;
 extern std::condition_variable cv;
 extern bool a_done;
 extern bool c_done;
+extern de265_image *decodedImg[100];
+extern int decodedImgCount;
 
 void print_current_time(const char *extra)
 {
@@ -176,17 +178,21 @@ void VideoDecoder::decoder_loop()
       mutex.lock();
       if (img)
       {
+        decodedImg[decodedImgCount++] = (de265_image *)img;
         img = NULL;
         de265_release_next_picture(ctx); // 释放之前帧     //img==>NULL
       }
 
       img = de265_peek_next_picture(ctx); // 获取新的一帧  //ctx==>img
       bool prefetch_buf = true;
-      int more = 1;
+
       while (img == NULL)
       {
+        printf("prefectch data...\n");
         mutex.unlock();
+        int more = 1;
         de265_error err = de265_decode(ctx, &more);
+        printf("more:%d,err:%d\n", more, err);
         mutex.lock();
         if (more && err == DE265_OK)
         {
@@ -199,19 +205,26 @@ void VideoDecoder::decoder_loop()
           int buf_size = fread(buf, 1, sizeof(buf), mFH);
           int err = de265_push_data(ctx, buf, buf_size, 0, 0); // file==>ctx
 
-          if (buf_size == 0)
-          {
-            prefetch_buf = false;
-            mVideoEnded = true;
-          }
+          // if (buf_size == 0)
+          // {
+          //   prefetch_buf = false;
+          //   mVideoEnded = true;
+          // }
         }
-        if (!prefetch_buf && img == NULL)
+        else if (!more)
         {
           mVideoEnded = true;
           mPlayingVideo = false; // TODO: send signal back
           printf("no more picture!++++++++++++++\n");
           break;
         }
+        // if (!prefetch_buf && img == NULL)
+        // {
+        //   mVideoEnded = true;
+        //   mPlayingVideo = false; // TODO: send signal back
+        //   printf("no more picture!++++++++++++++\n");
+        //   break;
+        // }
       }
       // printf("img == NULL ? %d", img == NULL);
       // show one decoded picture
@@ -230,14 +243,14 @@ void VideoDecoder::decoder_loop()
     else
     {
       std::unique_lock<std::mutex> lock(myMutex); // 相当于myMutex.lock()
-      // printf("c lock playing video %d \n", mPlayingVideo);
+      printf("c lock playing video %d \n", mPlayingVideo);
       c_done = true;
       a_done = false;
       cv.notify_one();
 
       while (!a_done)
       {
-        // printf("c unlock playing video %d \n", mPlayingVideo);
+        printf("c unlock playing video %d \n", mPlayingVideo);
         cv.wait(lock);
       }
       if (mVideoEnded)
