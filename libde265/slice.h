@@ -288,12 +288,12 @@ struct sao_info
   unsigned char SaoTypeIdx; // use with (SaoTypeIdx>>(2*cIdx)) & 0x3
   unsigned char SaoEoClass; // use with (SaoTypeIdx>>(2*cIdx)) & 0x3
 
-  uint8_t sao_band_position[3];
-  int8_t saoOffsetVal[3][4]; // index with [][idx-1] as saoOffsetVal[][0]==0 always
+  std::array<uint8_t, 3> sao_band_position;
+  std::array<std::array<int8_t, 4>, 3> saoOffsetVal; // index with [][idx-1] as saoOffsetVal[][0]==0 always
   // 重载 << 运算符用于自定义输出格式
   friend std::ostream &operator<<(std::ostream &os, const sao_info &info)
   {
-    os << "(sao_info:SaoTypeIdx" << info.SaoTypeIdx << ", SaoEoClass" << info.SaoEoClass << ", sao_band_position: [";
+    os << "(sao_info:SaoTypeIdx" << static_cast<int>(info.SaoTypeIdx) << ", SaoEoClass" << static_cast<int>(info.SaoEoClass) << ", sao_band_position: [";
     for (int i = 0; i < 3; ++i)
     {
       os << static_cast<int>(info.sao_band_position[i]);

@@ -39,7 +39,9 @@
 #include "libde265/slice.h"
 #include "libde265/nal.h"
 #include <iostream>
+#include <fstream>
 #include <stdint.h>
+#include <typeinfo>
 
 // 定义一个检查类型的宏
 #define IS_UINT8(x) (sizeof(x) == sizeof(uint8_t))
@@ -96,6 +98,23 @@ public:
     width_in_units = 0;
     height_in_units = 0;
   }
+  MetaDataArray& operator=(const MetaDataArray& other) {
+    if (this != &other) { 
+        // 深拷贝 data 数组
+        if (other.data != nullptr && other.data_size > 0) {
+            data = new DataUnit[other.data_size];
+            memcpy(data, other.data, sizeof(DataUnit) * other.data_size);
+        } else {
+            data = nullptr;
+        }
+        
+        data_size = other.data_size;
+        log2unitSize = other.log2unitSize;
+        width_in_units = other.width_in_units;
+        height_in_units = other.height_in_units;
+    }
+    return *this;
+}
   ~MetaDataArray() { free(data); }
 
   LIBDE265_CHECK_RESULT bool alloc(int w, int h, int _log2unitSize)
@@ -172,8 +191,6 @@ public:
     int length = data_size > 20 ? 20 : data_size;
     for (int i = 0; i < length; ++i)
     {
-      // printf("element %d: %d\t", i, data[i]);
-      printf("element %d:\n", i);
       if IS_UINT8 (data[i])
       {
         printf("%d, \n", data[i]);
@@ -184,6 +201,24 @@ public:
       }
     }
     printf("\n===========print over!==========\n");
+  }
+
+  void printMyself(std::ofstream &outfile) const
+  {
+    outfile << data_size << " " << log2unitSize << " " << width_in_units << " " << height_in_units << "\n";
+    for (int i = 0; i < data_size; ++i)
+    {
+      if IS_UINT8 (data[i])
+      {
+        int tmp = static_cast<int>(data[i]);
+        outfile << tmp << " ";
+      }
+      else
+      {
+        outfile << data[i] << std::endl;
+      }
+    }
+    outfile << "\n";
   }
 
   // private:
@@ -216,6 +251,10 @@ public:
 
 struct CTB_info
 {
+  operator int() const
+  {
+    return 0;
+  }
   uint16_t SliceAddrRS;
   uint16_t SliceHeaderIndex; // index into array to slice header for this CTB
 
@@ -238,6 +277,10 @@ struct CTB_info
 
 struct CB_ref_info
 {
+  operator int() const
+  {
+    return 0;
+  }
   uint8_t log2CbSize : 3; /* [0;6] (1<<log2CbSize) = 64
                              This is only set in the top-left corner of the CB.
                              The other values should be zero.
@@ -272,10 +315,48 @@ struct CB_ref_info
   }
 };
 
+
+
 struct de265_image
 {
   de265_image();
   ~de265_image();
+
+  de265_image& operator=(const de265_image& other) {
+        if (this != &other) {
+          image_allocation_functions = other.image_allocation_functions; //必须手动添加
+          for (int i = 0; i < 3; ++i)
+          {
+            if (other.pixels[i] != nullptr) {
+                pixels[i] = new uint8_t[other.stride * other.height];
+                memcpy(pixels[i], other.pixels[i], other.stride * other.height);
+            } else {
+                pixels[i] = nullptr;
+            }
+          }
+        for (int i = 0; i < 3; ++i) {
+            if (other.pixels_confwin[i] != nullptr) {
+                pixels_confwin[i] = new uint8_t[other.stride * other.height];
+                memcpy(pixels_confwin[i], other.pixels_confwin[i], other.stride * other.height);
+            } else {
+                pixels_confwin[i] = nullptr;
+            }
+        }
+        slices.clear();
+        for (slice_segment_header *slice : other.slices)
+        {
+          slice_segment_header *new_slice = new slice_segment_header(*slice);
+          slices.push_back(new_slice);
+        }
+        for (int i = 0; i < 3; ++i) {
+            bpp_shift[i] = other.bpp_shift[i];
+        }
+        
+  
+        }
+        
+        return *this;
+  }
 
   de265_error alloc_image(int w, int h, enum de265_chroma c,
                           std::shared_ptr<const seq_parameter_set> sps,
@@ -540,40 +621,61 @@ public:
      All CTB's processing states are set to 'unprocessed'.
   */
   void clear_metadata();
-  void get_all_metadata()
+  void get_all_metadata();
+
+  std::ofstream outfile;
+  void saveInfoToFile(const char *filename = "metaInfo.txt")
   {
-    printf("nThreadsQueued:%d,nThreadsRunning:%d,nThreadsBlocked:%d,nThreadsFinished:%d,nThreadsTotal:%d\n", nThreadsQueued, nThreadsRunning, nThreadsBlocked, nThreadsFinished, nThreadsTotal);
+    outfile = std::ofstream(filename);
+    // 检查文件是否成功打开
+    if (!outfile.is_open())
+    {
+      std::cerr << "Failed to open file!" << std::endl;
+      return;
+    }
+    // printf("nThreadsQueued:%d,nThreadsRunning:%d,nThreadsBlocked:%d,nThreadsFinished:%d,nThreadsTotal:%d\n", nThreadsQueued, nThreadsRunning, nThreadsBlocked, nThreadsFinished, nThreadsTotal);
+    // printf("BitDepth_Y:%d,BitDepth_C:%d,SubWidthC:%d,SubHeightC:%d\n", BitDepth_Y, BitDepth_C, SubWidthC, SubHeightC);
+    outfile << filename << std::endl;
+    outfile << nThreadsQueued << " " << nThreadsRunning << " " << nThreadsBlocked << " " << nThreadsFinished << " " << nThreadsTotal << std::endl;
     printf("BitDepth_Y:%d,BitDepth_C:%d,SubWidthC:%d,SubHeightC:%d\n", BitDepth_Y, BitDepth_C, SubWidthC, SubHeightC);
-    printf("============print ctb info============\n");
-    ctb_info.printMyself();
-    printf("============print ctb info============\n");
+    outfile << static_cast<int>(BitDepth_Y) << " " << static_cast<int>(BitDepth_C) << " " << static_cast<int>(SubWidthC) << " " << static_cast<int>(SubHeightC) << std::endl;
+    // exit(1);
 
-    printf("============print pb_info info============\n");
-    pb_info.printMyself();
-    printf("============print pb_info info============\n");
+    // printf("============print ctb info============\n");
+    outfile << "ctb info:\n";
+    ctb_info.printMyself(outfile);
+    // printf("============print ctb info============\n");
 
-    printf("============print cb_info info============\n");
-    cb_info.printMyself();
-    printf("============print cb_info info============\n");
+    // printf("============print pb_info info============\n");
+    outfile << "pb_info:\n";
+    pb_info.printMyself(outfile);
+    // printf("============print pb_info info============\n");
 
-    printf("============print intraPredMode info============\n");
-    intraPredMode.printMyself();
-    printf("============print intraPredMode info============\n");
+    // printf("============print cb_info info============\n");
+    outfile << "cb_info:\n";
+    cb_info.printMyself(outfile);
+    // printf("============print cb_info info============\n");
 
-    printf("============print intraPredModeC info============\n");
-    intraPredModeC.printMyself();
-    printf("============print intraPredModeC info============\n");
+    outfile << "intraPredMode:\n";
+    // printf("============print intraPredMode info============\n");
+    intraPredMode.printMyself(outfile);
+    // printf("============print intraPredMode info============\n");
 
-    printf("============print tu_info info============\n");
-    tu_info.printMyself();
-    printf("============print tu_info info============\n");
+    outfile << "intraPredModeC:\n";
+    // printf("============print intraPredModeC info============\n");
+    intraPredModeC.printMyself(outfile);
+    // printf("============print intraPredModeC info============\n");
 
+    // printf("============print tu_info info============\n");
+    outfile << "tu_info:\n";
+    tu_info.printMyself(outfile);
+    // printf("============print tu_info info============\n");
+
+    // outfile << "deblk_info:\n";
+    // printf("============print deblk_info info============\n");
+    deblk_info.printMyself(outfile);
     printf("============print deblk_info info============\n");
-    deblk_info.printMyself();
-    printf("============print deblk_info info============\n");
-  }
-  void myPrint(CTB_info)
-  {
+    outfile.close();
   }
   // void save_img(const char *filename = "imgMetaInfo.json")
   // {

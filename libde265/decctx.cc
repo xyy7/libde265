@@ -1309,7 +1309,7 @@ de265_error decoder_context::decode(int *more)
     if (more)
     {
       *more = ctx->dpb.num_pictures_in_output_queue();
-      printf("num_pictures_in_output_queue:%d\n", more);
+      // printf("num_pictures_in_output_queue:%d\n", more);
     }
 
     return DE265_OK;
@@ -1326,7 +1326,7 @@ de265_error decoder_context::decode(int *more)
     {
       *more = 1;
     }
-    printf("waiting for input data\n");
+    // printf("waiting for input data\n");
     return DE265_ERROR_WAITING_FOR_INPUT_DATA;
   }
 
@@ -1372,7 +1372,7 @@ de265_error decoder_context::decode(int *more)
   {
     // decoding error is assumed to be unrecoverable
     *more = (err == DE265_OK && did_work);
-    printf("err==DE265_OK:%d, did_work %d\n", err == DE265_OK, did_work);
+    // printf("err==DE265_OK:%d, did_work %d\n", err == DE265_OK, did_work);
   }
 
   return err;

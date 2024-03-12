@@ -40,10 +40,16 @@ public:
 
 class PBMotion
 {
+
 public:
-  uint8_t predFlag[2]; // which of the two vectors is actually used
-  int8_t refIdx[2];    // index into RefPicList
-  MotionVector mv[2];  // the absolute motion vectors
+  operator int() const
+  {
+    return 0;
+  }
+
+  std::array<uint8_t, 2> predFlag; // which of the two vectors is actually used
+  std::array<int8_t, 2> refIdx;    // index into RefPicList
+  std::array<MotionVector, 2> mv;  // the absolute motion vectors
 
   bool operator==(const PBMotion &) const;
   friend std::ostream &operator<<(std::ostream &os, const PBMotion &pb)

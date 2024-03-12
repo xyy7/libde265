@@ -55,7 +55,7 @@ class De265Image(ctypes.Structure):
 sotest = cdll.LoadLibrary("/data/chenminghui/test265/sherlock265/libgetCTBinfo.so")
 # sotest.getCTBinfo.restype = ctypes.POINTER(Decoder)  # 传出只能是一个值
 sotest.getCTBinfo.restype = ctypes.POINTER(ctypes.POINTER(De265Image))  # 传出只能是一个值
-sotest.deleteMdecoder.argtypes = [ctypes.POINTER(Decoder)]  # 传入需要一个列表
+# sotest.deleteMdecoder.argtypes = [ctypes.POINTER(Decoder)]  # 传入需要一个列表
 
 
 for i in range(2):

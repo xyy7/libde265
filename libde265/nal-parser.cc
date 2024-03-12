@@ -415,7 +415,7 @@ de265_error NAL_Parser::push_data(const unsigned char *data, int len,
   }
 
   nal->set_size(out - nal->data());
-  printf("push data nal-parser return %d\n", DE265_OK);
+  // printf("push data nal-parser return %d\n", DE265_OK);
   return DE265_OK;
 }
 

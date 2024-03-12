@@ -341,6 +341,8 @@ extern "C"
       void (*release_buffer)(de265_decoder_context *ctx, // first parameter deprecated
                              struct de265_image *img,
                              void *userdata);
+     
+
    };
 
    /* The user data pointer will be given to the get_buffer() and release_buffer() functions

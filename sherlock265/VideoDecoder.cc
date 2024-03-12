@@ -108,16 +108,13 @@ VideoDecoder::VideoDecoder()
 
 VideoDecoder::~VideoDecoder()
 {
-  printf("come in video decoder.\n");
   free_decoder();
-  printf("free_decoder exit\n");
 #ifdef HAVE_SWSCALE
   if (sws != NULL)
   {
     sws_freeContext(sws);
   }
 #endif
-  printf("~VideoDecoder exit\n");
 }
 
 void VideoDecoder::run()

@@ -292,6 +292,12 @@ class decoder_context : public base_context {
  public:
   decoder_context();
   ~decoder_context();
+  decoder_context& operator=(const decoder_context& other) {
+        if (this != &other) { 
+           
+        }
+        return *this;
+    }
 
   de265_error start_thread_pool(int nThreads);
   void        stop_thread_pool();
