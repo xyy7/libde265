@@ -47,6 +47,7 @@
 #include "libde265/quality.h"
 // pybind11 头文件和命名空间
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 namespace py = pybind11;
 
 #if HAVE_VIDEOGFX
@@ -90,8 +91,8 @@ int highestTID = 100;
 int verbosity = 0;
 int disable_deblocking = 0;
 int disable_sao = 0;
-de265_image *decodedImg[100];
-int decodedImgCount;
+
+std::array<de265_image*, 1000> decodedImg;
 
 static struct option long_options[] = {
     {"quiet", no_argument, 0, 'q'},
@@ -612,11 +613,12 @@ void (*volatile __malloc_initialize_hook)(void) = init_my_hooks;
 #endif
 #endif
 
-extern "C" void getCTBinfo()
+void getCTBinfo()
 {
   int argc;
   char **argv;
-  framecnt = 0;
+  
+  // framecnt = 0;
   // deleteDecodedImg(decodedImg); // 需要注意这里释放的时间
 
   const char *filename = "/data/chenminghui/test265/testdata/girlshy.h265";
@@ -913,9 +915,12 @@ extern "C" void getCTBinfo()
 
       if (img)
       {
-        decodedImg[framecnt] = (de265_image *)img;
+        
+        // decodedImg[framecnt] = *img;
+        decodedImg[framecnt] = new de265_image;
+        *decodedImg[framecnt] = *img;
         // decodedImg[framecnt]->saveInfoToFile();
-        printf("framecnt:%d\n", framecnt);
+        // printf("framecnt:%d\n", framecnt);
         if (measure_quality)
         {
           measure(img);
@@ -982,8 +987,10 @@ extern "C" void getCTBinfo()
 
   for (int i = 0; i < framecnt; ++i)
   {
-    printf("%d pointer: %p\n", i, decodedImg[i]);
+    // printf("%d pointer: %p\n", i, &decodedImg[i]);
+    delete decodedImg[i];
   }
+  framecnt = 0;
 
   // return decodedImg;
   return;
@@ -991,10 +998,10 @@ extern "C" void getCTBinfo()
 
 PYBIND11_MODULE(dec265, m)
 {
-  // 可选，说明这个模块是做什么的
   m.doc() = "pybind11 example plugin";
-  // def("给python调用方法名"， &实际操作的函数， "函数功能说明"，默认参数). 其中函数功能说明为可选
   m.def("getCTBinfo", &getCTBinfo, "A function which get h265 metaInfo.");
+  // m.attr("decodedImg") = decodedImg;
+
   py::class_<de265_image>(m, "de265_image")
       .def_readwrite("ctb_info", &de265_image::ctb_info)
       .def_readwrite("cb_info", &de265_image::cb_info)
@@ -1003,66 +1010,66 @@ PYBIND11_MODULE(dec265, m)
       .def_readwrite("intraPredModeC", &de265_image::intraPredModeC)
       .def_readwrite("tu_info", &de265_image::tu_info)
       .def_readwrite("deblk_info", &de265_image::deblk_info);
-  // m.attr("decodedImg") = decodedImg;
-  py::class_<MetaDataArray<CTB_info>>(m, "MetaDataArray")
+  py::class_<MetaDataArray<uint8_t>>(m, "MetaDataArrayUint8")
+      .def_readwrite("data", &MetaDataArray<uint8_t>::data) // uint8数组指针可以
+      .def_readwrite("data_size", &MetaDataArray<uint8_t>::data_size)
+      .def_readwrite("log2unitSize", &MetaDataArray<uint8_t>::log2unitSize)
+      .def_readwrite("width_in_units", &MetaDataArray<uint8_t>::width_in_units)
+      .def_readwrite("height_in_units", &MetaDataArray<uint8_t>::height_in_units);
+  py::class_<MetaDataArray<CTB_info>>(m, "MetaDataArrayCTB")
       .def_readwrite("data", &MetaDataArray<CTB_info>::data)
       .def_readwrite("data_size", &MetaDataArray<CTB_info>::data_size)
       .def_readwrite("log2unitSize", &MetaDataArray<CTB_info>::log2unitSize)
       .def_readwrite("width_in_units", &MetaDataArray<CTB_info>::width_in_units)
       .def_readwrite("height_in_units", &MetaDataArray<CTB_info>::height_in_units);
   py::class_<CTB_info>(m, "CTB_info")
-      .def_readwrite("SliceAddrRS", &CTB_info::SliceAddrRS) // uint_16可以，但是uint_8不可以
+      .def_readwrite("SliceAddrRS", &CTB_info::SliceAddrRS)
       .def_readwrite("SliceHeaderIndex", &CTB_info::SliceHeaderIndex)
       .def_readwrite("saoInfo", &CTB_info::saoInfo)
       .def_readwrite("deblock", &CTB_info::deblock)
       .def_readwrite("has_pcm_or_cu_transquant_bypass", &CTB_info::has_pcm_or_cu_transquant_bypass);
-  // py::class_<MetaDataArray<CB_ref_info>>(m, "MetaDataArray")
-  //     .def_readwrite("data", &MetaDataArray<CB_ref_info>::data)
-  //     .def_readwrite("data_size", &MetaDataArray<CB_ref_info>::data_size)
-  //     .def_readwrite("log2unitSize", &MetaDataArray<CB_ref_info>::log2unitSize)
-  //     .def_readwrite("width_in_units", &MetaDataArray<CB_ref_info>::width_in_units)
-  //     .def_readwrite("height_in_units", &MetaDataArray<CB_ref_info>::height_in_units);
-  // py::class_<saoInfo>(m, "saoInfo")
-  //     .def_readwrite("SaoTypeIdx", &saoInfo::SaoTypeIdx)
-  //     .def_readwrite("SaoEoClass", &saoInfo::SaoEoClass)
-  //     .def_readwrite("sao_band_position", &saoInfo::sao_band_position)
-  //     .def_readwrite("saoOffsetVal", &saoInfo::saoOffsetVal);
-  // py::class_<CB_ref_info>(m, "CB_ref_info")
-  // .def_readwrite("log2CbSize", &static_cast<int>(CB_ref_info::log2CbSize))
-  // .def_readwrite("PartMode", &static_cast<int>(CB_ref_info::PartMode))
-  // .def_readwrite("ctDepth", &static_cast<int>(CB_ref_info::ctDepth))
-  // .def_readwrite("PredMode", &static_cast<int>(CB_ref_info::PredMode))
-  // .def_readwrite("pcm_flag", &static_cast<int>(CB_ref_info::pcm_flag))
-  // .def_readwrite("QP_Y", &static_cast<int>(CB_ref_info::QP_Y))
-  // .def_readwrite("cu_transquant_bypass", &static_cast<int>(CB_ref_info::cu_transquant_bypass));
-  // .def_readwrite("PartMode", &CB_ref_info::PartMode) // 不能是unit_8类型
-  // .def_readwrite("ctDepth", &CB_ref_info::ctDepth)
-  // .def_readwrite("PredMode", &CB_ref_info::PredMode)
-  // .def_readwrite("pcm_flag", &CB_ref_info::pcm_flag)
-  // .def_readwrite("cu_transquant_bypass", &CB_ref_info::cu_transquant_bypass)
-  // .def_readwrite("QP_Y", &CB_ref_info::QP_Y);
-  // py::class_<MetaDataArray<PBMotion>>(m, "MetaDataArray")
-  //     .def_readwrite("data", &MetaDataArray<PBMotion>::data)
-  //     .def_readwrite("data_size", &MetaDataArray<PBMotion>::data_size)
-  //     .def_readwrite("log2unitSize", &MetaDataArray<PBMotion>::log2unitSize)
-  //     .def_readwrite("width_in_units", &MetaDataArray<PBMotion>::width_in_units)
-  //     .def_readwrite("height_in_units", &MetaDataArray<PBMotion>::height_in_units);
-  // However, this approach will not work with bit fields. One way to circumvent that problem is to generate setters and getters for such data members and bind them as properties
-  // py::class_<PBMotion>(m, "PBMotion")
-  //     .def_readwrite("predFlag", &PBMotion::predFlag)
-  //     .def_readwrite("refIdx", &PBMotion::refIdx)
-  //     .def_readwrite("mv", &PBMotion::mv);
-  // py::class_<MotionVector>(m, "MotionVector")
-  //     .def_readwrite("x", &MotionVector::x)
-  //     .def_readwrite("y", &MotionVector::y);
-  // py::class_<MetaDataArray<uint8_t>>(m, "MetaDataArray")
-  //     .def_readwrite("data", &MetaDataArray<uint8_t>::data) // uint8数组可以
-  //     .def_readwrite("data_size", &MetaDataArray<uint8_t>::data_size)
-  //     .def_readwrite("log2unitSize", &MetaDataArray<uint8_t>::log2unitSize)
-  //     .def_readwrite("width_in_units", &MetaDataArray<uint8_t>::width_in_units)
-  //     .def_readwrite("height_in_units", &MetaDataArray<uint8_t>::height_in_units);
+  py::class_<MetaDataArray<CB_ref_info>>(m, "MetaDataArrayCB")
+      .def_readwrite("data", &MetaDataArray<CB_ref_info>::data)
+      .def_readwrite("data_size", &MetaDataArray<CB_ref_info>::data_size)
+      .def_readwrite("log2unitSize", &MetaDataArray<CB_ref_info>::log2unitSize)
+      .def_readwrite("width_in_units", &MetaDataArray<CB_ref_info>::width_in_units)
+      .def_readwrite("height_in_units", &MetaDataArray<CB_ref_info>::height_in_units);
+  py::class_<sao_info>(m, "sao_info")
+      .def("SaoTypeIdx", [](sao_info &s)
+           { return s.SaoTypeIdx; })
+      .def("SaoEoClass", [](sao_info &s)
+           { return s.SaoEoClass; })
+      .def_readwrite("sao_band_position", &sao_info::sao_band_position)
+      .def_readwrite("saoOffsetVal", &sao_info::saoOffsetVal);
+  py::class_<CB_ref_info>(m, "CB_ref_info")
+      .def("log2CbSize", [](CB_ref_info &s)
+           { return s.log2CbSize; })
+      .def("pcm_flag", [](CB_ref_info &s)
+           { return s.pcm_flag; })
+      .def("cu_transquant_bypass", [](CB_ref_info &s)
+           { return s.cu_transquant_bypass; })
+      .def("log2CbSize", [](CB_ref_info &s)
+           { return s.log2CbSize; })
+      .def("QP_Y", [](CB_ref_info &s)
+           { return s.QP_Y; })
+      .def("ctDepth", [](CB_ref_info &s)
+           { return s.ctDepth; })
+      .def("PartMode", [](CB_ref_info &s)
+           { return s.PartMode; });
+  py::class_<MetaDataArray<PBMotion>>(m, "MetaDataArrayMotion")
+      .def_readwrite("data", &MetaDataArray<PBMotion>::data)
+      .def_readwrite("data_size", &MetaDataArray<PBMotion>::data_size)
+      .def_readwrite("log2unitSize", &MetaDataArray<PBMotion>::log2unitSize)
+      .def_readwrite("width_in_units", &MetaDataArray<PBMotion>::width_in_units)
+      .def_readwrite("height_in_units", &MetaDataArray<PBMotion>::height_in_units);
+  py::class_<PBMotion>(m, "PBMotion")
+      .def_readwrite("predFlag", &PBMotion::predFlag)
+      .def_readwrite("refIdx", &PBMotion::refIdx)
+      .def_readwrite("mv", &PBMotion::mv);
+  py::class_<MotionVector>(m, "MotionVector")
+      .def_readwrite("x", &MotionVector::x)
+      .def_readwrite("y", &MotionVector::y);
 }
-
 int main(int argc, char **argv)
 {
   return 0;
