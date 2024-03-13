@@ -321,7 +321,6 @@ struct de265_image
 {
   de265_image();
   ~de265_image();
-
   de265_image& operator=(const de265_image& other) {
         if (this != &other) {
           image_allocation_functions = other.image_allocation_functions; //必须手动添加
@@ -351,12 +350,21 @@ struct de265_image
         for (int i = 0; i < 3; ++i) {
             bpp_shift[i] = other.bpp_shift[i];
         }
-        
-  
+        ctb_info = other.ctb_info;
+        cb_info = other.cb_info;
+        pb_info = other.pb_info;
+        intraPredMode = other.intraPredMode;
+        intraPredModeC = other.intraPredModeC;
+        tu_info = other.tu_info;
+        deblk_info = other.deblk_info;
         }
-        
         return *this;
   }
+
+
+  de265_image(const de265_image& other){
+    *this = other;
+  };
 
   de265_error alloc_image(int w, int h, enum de265_chroma c,
                           std::shared_ptr<const seq_parameter_set> sps,

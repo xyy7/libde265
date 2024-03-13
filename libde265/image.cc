@@ -524,6 +524,7 @@ de265_error de265_image::alloc_image(int w, int h, enum de265_chroma c,
 
 de265_image::~de265_image()
 {
+  printf("release this %p\n",this);
   release();
 
   // free progress locks

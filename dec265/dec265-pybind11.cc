@@ -92,7 +92,8 @@ int verbosity = 0;
 int disable_deblocking = 0;
 int disable_sao = 0;
 
-std::array<de265_image*, 1000> decodedImg;
+
+
 
 static struct option long_options[] = {
     {"quiet", no_argument, 0, 'q'},
@@ -613,13 +614,388 @@ void (*volatile __malloc_initialize_hook)(void) = init_my_hooks;
 #endif
 #endif
 
-void getCTBinfo()
+std::vector<de265_image*> getCTBinfo(std::vector<de265_image*> decodedImg)
 {
   int argc;
   char **argv;
+
+  const char *filename = "/data/chenminghui/test265/testdata/girlshy.h265";
+
+  while (1)
+  {
+    int option_index = 0;
+
+    int c = getopt_long(argc, argv, "qt:chf:o:dLB:n0vT:m:se"
+#if HAVE_VIDEOGFX && HAVE_SDL
+                                    "V"
+#endif
+                        ,
+                        long_options, &option_index);
+    if (c == -1)
+      break;
+
+    switch (c)
+    {
+    case 'q':
+      quiet++;
+      break;
+    case 't':
+      nThreads = atoi(optarg);
+      break;
+    case 'c':
+      check_hash = true;
+      break;
+    case 'f':
+      max_frames = atoi(optarg);
+      break;
+    case 'o':
+      write_yuv = true;
+      output_filename = optarg;
+      break;
+    case 'h':
+      show_help = true;
+      break;
+    case 'd':
+      dump_headers = true;
+      break;
+    case 'n':
+      nal_input = true;
+      break;
+    case 'V':
+      output_with_videogfx = true;
+      break;
+    case 'L':
+      logging = false;
+      break;
+    case '0':
+      no_acceleration = true;
+      break;
+    case 'B':
+      write_bytestream = true;
+      bytestream_filename = optarg;
+      break;
+    case 'm':
+      measure_quality = true;
+      reference_filename = optarg;
+      break;
+    case 's':
+      show_ssim_map = true;
+      break;
+    case 'e':
+      show_psnr_map = true;
+      break;
+    case 'T':
+      highestTID = atoi(optarg);
+      break;
+    case 'v':
+      verbosity++;
+      break;
+    }
+  }
+
+  //   if (optind != argc - 1 || show_help)
+  //   {
+  //     fprintf(stderr, " dec265  v%s\n", de265_get_version());
+  //     fprintf(stderr, "-----------------\n");
+  //     fprintf(stderr, "usage: dec265 [options] videofile.bin\n");
+  //     fprintf(stderr, "The video file must be a raw bitstream, or a stream with NAL units (option -n).\n");
+  //     fprintf(stderr, "\n");
+  //     fprintf(stderr, "options:\n");
+  //     fprintf(stderr, "  -q, --quiet       do not show decoded image\n");
+  //     fprintf(stderr, "  -t, --threads N   set number of worker threads (0 - no threading)\n");
+  //     fprintf(stderr, "  -c, --check-hash  perform hash check\n");
+  //     fprintf(stderr, "  -n, --nal         input is a stream with 4-byte length prefixed NAL units\n");
+  //     fprintf(stderr, "  -f, --frames N    set number of frames to process\n");
+  //     fprintf(stderr, "  -o, --output      write YUV reconstruction\n");
+  //     fprintf(stderr, "  -d, --dump        dump headers\n");
+  // #if HAVE_VIDEOGFX && HAVE_SDL
+  //     fprintf(stderr, "  -V, --videogfx    output with videogfx instead of SDL\n");
+  // #endif
+  //     fprintf(stderr, "  -0, --noaccel     do not use any accelerated code (SSE)\n");
+  //     fprintf(stderr, "  -v, --verbose     increase verbosity level (up to 3 times)\n");
+  //     fprintf(stderr, "  -L, --no-logging  disable logging\n");
+  //     fprintf(stderr, "  -B, --write-bytestream FILENAME  write raw bytestream (from NAL input)\n");
+  //     fprintf(stderr, "  -m, --measure YUV compute PSNRs relative to reference YUV\n");
+  // #if HAVE_VIDEOGFX
+  //     fprintf(stderr, "  -s, --ssim        show SSIM-map (only when -m active)\n");
+  //     fprintf(stderr, "  -e, --errmap      show error-map (only when -m active)\n");
+  // #endif
+  //     fprintf(stderr, "  -T, --highest-TID select highest temporal sublayer to decode\n");
+  //     fprintf(stderr, "      --disable-deblocking   disable deblocking filter\n");
+  //     fprintf(stderr, "      --disable-sao          disable sample-adaptive offset filter\n");
+  //     fprintf(stderr, "  -h, --help        show help\n");
+
+  //     exit(show_help ? 0 : 5);
+  //   }
+
+  de265_error err = DE265_OK;
+
+  de265_decoder_context *ctx = de265_new_decoder();
+
+  de265_set_parameter_bool(ctx, DE265_DECODER_PARAM_BOOL_SEI_CHECK_HASH, check_hash);
+  de265_set_parameter_bool(ctx, DE265_DECODER_PARAM_SUPPRESS_FAULTY_PICTURES, false);
+
+  de265_set_parameter_bool(ctx, DE265_DECODER_PARAM_DISABLE_DEBLOCKING, disable_deblocking);
+  de265_set_parameter_bool(ctx, DE265_DECODER_PARAM_DISABLE_SAO, disable_sao);
+
+  if (dump_headers)
+  {
+    de265_set_parameter_int(ctx, DE265_DECODER_PARAM_DUMP_SPS_HEADERS, 1);
+    de265_set_parameter_int(ctx, DE265_DECODER_PARAM_DUMP_VPS_HEADERS, 1);
+    de265_set_parameter_int(ctx, DE265_DECODER_PARAM_DUMP_PPS_HEADERS, 1);
+    de265_set_parameter_int(ctx, DE265_DECODER_PARAM_DUMP_SLICE_HEADERS, 1);
+  }
+
+  if (no_acceleration)
+  {
+    de265_set_parameter_int(ctx, DE265_DECODER_PARAM_ACCELERATION_CODE, de265_acceleration_SCALAR);
+  }
+
+  if (!logging)
+  {
+    de265_disable_logging();
+  }
+
+  de265_set_verbosity(verbosity);
+
+  if (argc >= 3)
+  {
+    if (nThreads > 0)
+    {
+      err = de265_start_worker_threads(ctx, nThreads);
+    }
+  }
+
+  de265_set_limit_TID(ctx, highestTID);
+
+  if (measure_quality)
+  {
+    reference_file = fopen(reference_filename, "rb");
+    if (reference_file == nullptr)
+    {
+      fprintf(stderr, "Error: cannot create measurement output file '%s'\n", reference_filename);
+      exit(5);
+    }
+  }
+
+  FILE *fh;
+  // if (strcmp(argv[optind], "-") == 0)
+  // {
+  //   fh = stdin;
+  // }
+  // else
+  // {
+  //   fh = fopen(argv[optind], "rb");
+  // }
+  fh = fopen(filename, "rb");
+
+  if (fh == NULL)
+  {
+    fprintf(stderr, "cannot open file %s!\n", argv[optind]);
+    exit(10);
+  }
+
+  FILE *bytestream_fh = NULL;
+
+  if (write_bytestream)
+  {
+    bytestream_fh = fopen(bytestream_filename, "wb");
+  }
+
+  bool stop = false;
+
+  struct timeval tv_start;
+  gettimeofday(&tv_start, NULL);
+
+  int pos = 0;
+
+  while (!stop)
+  {
+    // tid = (framecnt/1000) & 1;
+    // de265_set_limit_TID(ctx, tid);
+
+    if (nal_input)
+    {
+      uint8_t len[4];
+      int n = fread(len, 1, 4, fh);
+      uint32_t length = (len[0] << 24) + (len[1] << 16) + (len[2] << 8) + len[3];
+
+      if (length > kSecurityLimit_MaxNALSize)
+      {
+        fprintf(stderr, "NAL packet with size %" PRIu32 " exceeds security limit %" PRIu32 ", skipping this NAL.\n",
+                length,
+                kSecurityLimit_MaxNALSize);
+
+        fseek(fh, length, SEEK_CUR);
+
+        pos += length;
+      }
+      else
+      {
+        uint8_t *buf = (uint8_t *)malloc(length);
+        n = fread(buf, 1, length, fh);
+        err = de265_push_NAL(ctx, buf, n, pos, (void *)1);
+
+        if (write_bytestream)
+        {
+          uint8_t sc[3] = {0, 0, 1};
+          fwrite(sc, 1, 3, bytestream_fh);
+          fwrite(buf, 1, n, bytestream_fh);
+        }
+
+        free(buf);
+        pos += n;
+      }
+    }
+    else
+    {
+      // read a chunk of input data
+      uint8_t buf[BUFFER_SIZE];
+      int n = fread(buf, 1, BUFFER_SIZE, fh);
+
+      // decode input data
+      if (n)
+      {
+        err = de265_push_data(ctx, buf, n, pos, (void *)2);
+        if (err != DE265_OK)
+        {
+          break;
+        }
+      }
+
+      pos += n;
+
+      if (0)
+      { // fake skipping
+        if (pos > 1000000)
+        {
+          printf("RESET\n");
+          de265_reset(ctx);
+          pos = 0;
+
+          fseek(fh, -200000, SEEK_CUR);
+        }
+      }
+    }
+
+    // printf("pending data: %d\n", de265_get_number_of_input_bytes_pending(ctx));
+
+    if (feof(fh))
+    {
+      err = de265_flush_data(ctx); // indicate end of stream
+      stop = true;
+    }
+
+    // decoding / display loop
+
+    int more = 1;
+    while (more)
+    {
+      more = 0;
+
+      // decode some more
+
+      err = de265_decode(ctx, &more);
+      if (err != DE265_OK)
+      {
+        // if (quiet<=1) fprintf(stderr,"ERROR: %s\n", de265_get_error_text(err));
+
+        if (check_hash && err == DE265_ERROR_CHECKSUM_MISMATCH)
+          stop = 1;
+        more = 0;
+        break;
+      }
+
+      // show available images
+
+      const de265_image *img = de265_get_next_picture(ctx);
+      // TODO: cacel release img at new Image function and save imgList here, and return the list and ?delete? or delete at the python? or gc by python? how can I promise the right image order?
+
+      if (img)
+      {
+        
+        
+        de265_image *tmp = new de265_image;
+        *tmp = *img;
+        decodedImg.push_back(tmp);
+        if (measure_quality)
+        {
+          measure(img);
+        }
+
+        stop = output_image(img);
+        if (stop)
+          more = 0;
+        else
+          more = 1;
+      }
+
+      // show warnings
+
+      for (;;)
+      {
+        de265_error warning = de265_get_warning(ctx);
+        if (warning == DE265_OK)
+        {
+          break;
+        }
+
+        if (quiet <= 1)
+          fprintf(stderr, "WARNING: %s\n", de265_get_error_text(warning));
+      }
+    }
+  }
+
+  fclose(fh);
+
+  if (write_bytestream)
+  {
+    fclose(bytestream_fh);
+  }
+
+  if (measure_quality)
+  {
+    printf("#total  %6f %6f %6f %6f\n",
+           PSNR(mse_y / mse_frames),
+           PSNR(mse_cb / mse_frames),
+           PSNR(mse_cr / mse_frames),
+           ssim_y / ssim_frames);
+
+    fclose(reference_file);
+  }
+
+  de265_free_decoder(ctx);
+
+  struct timeval tv_end;
+  gettimeofday(&tv_end, NULL);
+
+  if (err != DE265_OK)
+  {
+    if (quiet <= 1)
+      fprintf(stderr, "decoding error: %s (code=%d)\n", de265_get_error_text(err), err);
+  }
+
+  double secs = tv_end.tv_sec - tv_start.tv_sec;
+  secs += (tv_end.tv_usec - tv_start.tv_usec) * 0.001 * 0.001;
+
+  if (quiet <= 1)
+    fprintf(stderr, "nFrames decoded: %d (%dx%d @ %5.2f fps)\n", framecnt,
+            width, height, framecnt / secs);
+
+  for (int i = 0; i < decodedImg.size(); ++i)
+  {
+    printf("create %d %p\n", i, decodedImg[i]);
+  }
+  framecnt = 0;
   
-  // framecnt = 0;
-  // deleteDecodedImg(decodedImg); // 需要注意这里释放的时间
+  return decodedImg;
+}
+
+de265_image* getCTBinfo1()
+{
+  int argc;
+  char **argv;
+  de265_image* decodedImg=nullptr;
 
   const char *filename = "/data/chenminghui/test265/testdata/girlshy.h265";
 
@@ -917,9 +1293,13 @@ void getCTBinfo()
       {
         
         // decodedImg[framecnt] = *img;
-        decodedImg[framecnt] = new de265_image;
-        *decodedImg[framecnt] = *img;
-        // decodedImg[framecnt]->saveInfoToFile();
+        // decodedImg[framecnt] =  new de265_image(*img);
+        if (!decodedImg)
+        {
+          // printf("create.\n");
+          decodedImg = new de265_image;
+          *decodedImg = *img;
+        }
         // printf("framecnt:%d\n", framecnt);
         if (measure_quality)
         {
@@ -985,23 +1365,31 @@ void getCTBinfo()
     fprintf(stderr, "nFrames decoded: %d (%dx%d @ %5.2f fps)\n", framecnt,
             width, height, framecnt / secs);
 
-  for (int i = 0; i < framecnt; ++i)
-  {
-    // printf("%d pointer: %p\n", i, &decodedImg[i]);
+  // for (int i = 0; i < 100; ++i)
+  // {
+  //   printf("%d pointer: %p\n", i,decodedImg[i]); //前面75有值，后面25是nil
+  //   // delete decodedImg[i];
+  // }
+  framecnt = 0;
+  printf("return %p\n",decodedImg);
+  return decodedImg;
+  // return;
+}
+
+void delCTBinfo1(de265_image* img){
+  printf("del pointer:%p\n",img);
+  delete img;
+}
+
+void delCTBinfo( std::vector<de265_image*> decodedImg){
+  for (int i = 0; i < decodedImg.size();++i){
     delete decodedImg[i];
   }
-  framecnt = 0;
-
-  // return decodedImg;
-  return;
 }
 
 PYBIND11_MODULE(dec265, m)
 {
   m.doc() = "pybind11 example plugin";
-  m.def("getCTBinfo", &getCTBinfo, "A function which get h265 metaInfo.");
-  // m.attr("decodedImg") = decodedImg;
-
   py::class_<de265_image>(m, "de265_image")
       .def_readwrite("ctb_info", &de265_image::ctb_info)
       .def_readwrite("cb_info", &de265_image::cb_info)
@@ -1069,6 +1457,12 @@ PYBIND11_MODULE(dec265, m)
   py::class_<MotionVector>(m, "MotionVector")
       .def_readwrite("x", &MotionVector::x)
       .def_readwrite("y", &MotionVector::y);
+
+  m.def("getCTBinfo", &getCTBinfo,py::return_value_policy::take_ownership);
+  m.def("delCTBinfo", &delCTBinfo);
+  m.def("getCTBinfo1", &getCTBinfo,py::return_value_policy::take_ownership);
+  m.def("delCTBinfo1", &delCTBinfo);
+
 }
 int main(int argc, char **argv)
 {
