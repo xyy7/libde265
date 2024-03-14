@@ -15,6 +15,17 @@ def testOneTime():
     res = dec265.getCTBinfo(imglist)
 
 
+def testOneTimeSTLbind():
+    imglist = dec265.VectorDe265ImagePointer()
+    res = dec265.getCTBinfo(imglist)
+
+
+def testSeveralTimesSTLbind(times=10):
+    imglist = dec265.VectorDe265ImagePointer()
+    for i in range(10):
+        res = dec265.getCTBinfo(imglist)
+
+
 def testSeveralTimes(times=10):
     imglist = []
     for i in range(10):
@@ -23,4 +34,6 @@ def testSeveralTimes(times=10):
 
 if __name__ == "__main__":
     # testOneTime()
-    testSeveralTimes()
+    # testOneTimeSTLbind()
+    # testSeveralTimes()
+    testSeveralTimesSTLbind()

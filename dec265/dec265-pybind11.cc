@@ -23,7 +23,6 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
 */
-
 #define DO_MEMORY_LOGGING 0
 
 #include "de265.h"
@@ -48,7 +47,10 @@
 // pybind11 头文件和命名空间
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/stl_bind.h>
 namespace py = pybind11;
+PYBIND11_MAKE_OPAQUE(std::vector<de265_image*>);
+
 
 #if HAVE_VIDEOGFX
 #include <libvideogfx.hh>
@@ -614,7 +616,12 @@ void (*volatile __malloc_initialize_hook)(void) = init_my_hooks;
 #endif
 #endif
 
-std::vector<de265_image*> getCTBinfo(std::vector<de265_image*> decodedImg)
+
+
+
+// std::vector<de265_image*> getCTBinfo(py::list imglist)
+// std::vector<de265_image*> getCTBinfo(std::vector<de265_image*> decodedImg)
+std::vector<de265_image*> getCTBinfo(std::vector<de265_image*> &decodedImg)
 {
   int argc;
   char **argv;
@@ -1457,6 +1464,8 @@ PYBIND11_MODULE(dec265, m)
   py::class_<MotionVector>(m, "MotionVector")
       .def_readwrite("x", &MotionVector::x)
       .def_readwrite("y", &MotionVector::y);
+
+  py::bind_vector<std::vector<de265_image*>>(m, "VectorDe265ImagePointer");
 
   m.def("getCTBinfo", &getCTBinfo,py::return_value_policy::take_ownership);
   m.def("delCTBinfo", &delCTBinfo);
