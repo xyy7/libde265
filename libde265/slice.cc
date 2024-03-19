@@ -360,12 +360,10 @@ de265_error slice_segment_header::read(bitreader* br, decoder_context* ctx,
   reset();
 
   // set defaults
-
   dependent_slice_segment_flag = 0;
 
 
   // read bitstream
-
   first_slice_segment_in_pic_flag = get_bits(br,1);
 
   if (ctx->get_RapPicFlag()) { // TODO: is this still correct ? Should we drop RapPicFlag ?
@@ -715,7 +713,6 @@ de265_error slice_segment_header::read(bitreader* br, decoder_context* ctx,
 
       if ((pps->weighted_pred_flag   && slice_type == SLICE_TYPE_P) ||
           (pps->weighted_bipred_flag && slice_type == SLICE_TYPE_B)) {
-
         if (!read_pred_weight_table(br,this,ctx))
           {
 	    ctx->add_warning(DE265_ERROR_CODED_PARAMETER_OUT_OF_RANGE, false);
@@ -2852,9 +2849,9 @@ void read_coding_tree_unit(thread_context* tctx)
   de265_image* img = tctx->img;
   const seq_parameter_set& sps = img->get_sps();
 
-  int xCtb = (tctx->CtbAddrInRS % sps.PicWidthInCtbsY);
-  int yCtb = (tctx->CtbAddrInRS / sps.PicWidthInCtbsY);
-  int xCtbPixels = xCtb << sps.Log2CtbSizeY;
+  int xCtb = (tctx->CtbAddrInRS % sps.PicWidthInCtbsY); //行索引
+  int yCtb = (tctx->CtbAddrInRS / sps.PicWidthInCtbsY); //列索引
+  int xCtbPixels = xCtb << sps.Log2CtbSizeY; //CTB左上角像素坐标
   int yCtbPixels = yCtb << sps.Log2CtbSizeY;
 
   logtrace(LogSlice,"----- decode CTB %d;%d (%d;%d) POC=%d, SliceAddrRS=%d\n",
@@ -2932,7 +2929,7 @@ int residual_coding(thread_context* tctx,
   enum PredMode PredMode = img->get_pred_mode(x0,y0);
 
   if (cIdx==0) {
-    img->set_nonzero_coefficient(x0,y0,log2TrafoSize);
+    img->set_nonzero_coefficient(x0,y0,log2TrafoSize); //tu_info
   }
 
 
@@ -3301,7 +3298,7 @@ int residual_coding(thread_context* tctx,
       int signHidden;
 
 
-      IntraPredMode predModeIntra;
+      enum IntraPredMode predModeIntra;
       if (cIdx==0) predModeIntra = img->get_IntraPredMode(x0,y0);
       else         predModeIntra = img->get_IntraPredModeC(x0,y0);
 

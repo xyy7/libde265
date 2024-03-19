@@ -117,6 +117,7 @@ int NAL_unit::num_skipped_bytes_before(int byte_position, int headerLength) cons
   return 0;
 }
 
+//移除NAL中的填充字节
 void NAL_unit::remove_stuffing_bytes()
 {
   uint8_t *p = data();

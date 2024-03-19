@@ -1217,7 +1217,7 @@ de265_error decoder_context::decode_NAL(NAL_unit *nal)
   nal_header nal_hdr;
   nal_hdr.read(&reader);
   ctx->process_nal_hdr(&nal_hdr);
-
+  //不支持多层级的可压缩解码
   if (nal_hdr.nuh_layer_id > 0)
   {
     // Discard all NAL units with nuh_layer_id > 0
@@ -1242,7 +1242,7 @@ de265_error decoder_context::decode_NAL(NAL_unit *nal)
   // TODO: better online switching of HighestTID
 
   // printf("hTid: %d\n", current_HighestTid);
-
+  //不支持大于当前已知的最高时域层级
   if (nal_hdr.nuh_temporal_id > current_HighestTid)
   {
     nal_parser.free_NAL_unit(nal);
@@ -1295,7 +1295,6 @@ de265_error decoder_context::decode(int *more)
   decoder_context *ctx = this;
 
   // if the stream has ended, and no more NALs are to be decoded, flush all pictures
-
   if (ctx->nal_parser.get_NAL_queue_length() == 0 &&
       (ctx->nal_parser.is_end_of_stream() || ctx->nal_parser.is_end_of_frame()) &&
       ctx->image_units.empty())
@@ -1304,6 +1303,7 @@ de265_error decoder_context::decode(int *more)
     // flush all pending pictures into output queue
 
     // ctx->push_current_picture_to_output_queue(); // TODO: not with new queue
+    //把reorder队列中的元素全部输入到output队列中
     ctx->dpb.flush_reorder_buffer();
 
     if (more)
@@ -1332,7 +1332,6 @@ de265_error decoder_context::decode(int *more)
 
   // when there are no free image buffers in the DPB, pause decoding
   // -> output stalled
-
   if (!ctx->dpb.has_free_dpb_picture(false))
   {
     if (more)
@@ -1340,8 +1339,8 @@ de265_error decoder_context::decode(int *more)
     return DE265_ERROR_IMAGE_BUFFER_FULL;
   }
 
+  //以上内容：如果结束了/没有NAL块/DPB满了，那么不需要执行解码操作
   // decode one NAL from the queue
-
   de265_error err = DE265_OK;
   bool did_work = false;
 

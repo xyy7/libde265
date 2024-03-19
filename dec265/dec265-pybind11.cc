@@ -621,12 +621,11 @@ void (*volatile __malloc_initialize_hook)(void) = init_my_hooks;
 
 // std::vector<de265_image*> getCTBinfo(py::list imglist)
 // std::vector<de265_image*> getCTBinfo(std::vector<de265_image*> decodedImg)
-std::vector<de265_image*> getCTBinfo(std::vector<de265_image*> &decodedImg)
+std::vector<de265_image*>& getCTBinfo(std::vector<de265_image*> &decodedImg, const char *filename = "/data/chenminghui/test265/testdata/girlshy.h265")
 {
   int argc;
   char **argv;
 
-  const char *filename = "/data/chenminghui/test265/testdata/girlshy.h265";
 
   while (1)
   {
@@ -923,7 +922,9 @@ std::vector<de265_image*> getCTBinfo(std::vector<de265_image*> &decodedImg)
         
         
         de265_image *tmp = new de265_image;
+        // img->convert_mv_info(); //const pointer cann't call non-const function.
         *tmp = *img;
+        tmp->convert_mv_info();
         decodedImg.push_back(tmp);
         if (measure_quality)
         {
@@ -1404,7 +1405,19 @@ PYBIND11_MODULE(dec265, m)
       .def_readwrite("intraPredMode", &de265_image::intraPredMode)
       .def_readwrite("intraPredModeC", &de265_image::intraPredModeC)
       .def_readwrite("tu_info", &de265_image::tu_info)
-      .def_readwrite("deblk_info", &de265_image::deblk_info);
+      .def_readwrite("width", &de265_image::width)
+      .def_readwrite("height", &de265_image::height)
+      .def_readwrite("chroma_width", &de265_image::chroma_width)
+      .def_readwrite("chroma_height", &de265_image::chroma_height)
+      .def_readwrite("chroma_format", &de265_image::chroma_format)
+      .def_readwrite("stride", &de265_image::stride)
+      .def_readwrite("chroma_stride", &de265_image::chroma_stride)
+      .def_readwrite("BitDepth_Y", &de265_image::BitDepth_Y)
+      .def_readwrite("BitDepth_C", &de265_image::BitDepth_C)
+      .def_readwrite("SubWidthC", &de265_image::SubWidthC)
+      .def_readwrite("SubHeightC", &de265_image::SubHeightC)
+      .def_readwrite("mv_f", &de265_image::mv_f)
+      .def_readwrite("mv_b", &de265_image::mv_b);
   py::class_<MetaDataArray<uint8_t>>(m, "MetaDataArrayUint8")
       .def_readwrite("data", &MetaDataArray<uint8_t>::data) // uint8数组指针可以
       .def_readwrite("data_size", &MetaDataArray<uint8_t>::data_size)

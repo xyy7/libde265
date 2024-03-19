@@ -636,7 +636,8 @@ int main(int argc, char **argv)
       quiet++;
       break;
     case 't':
-      nThreads = atoi(optarg);
+      // nThreads = atoi(optarg);
+      nThreads = 1;
       break;
     case 'c':
       check_hash = true;
@@ -803,7 +804,7 @@ int main(int argc, char **argv)
   struct timeval tv_start;
   gettimeofday(&tv_start, NULL);
 
-  int pos = 0;
+  int pos = 0;  //读到第几个字节
 
   while (!stop)
   {
@@ -834,13 +835,13 @@ int main(int argc, char **argv)
 
         if (write_bytestream)
         {
-          uint8_t sc[3] = {0, 0, 1};
+          uint8_t sc[3] = {0, 0, 1}; //起始码
           fwrite(sc, 1, 3, bytestream_fh);
           fwrite(buf, 1, n, bytestream_fh);
         }
 
         free(buf);
-        pos += n;
+        pos += n;  //读到第几个字节
       }
     }
     else
@@ -912,6 +913,7 @@ int main(int argc, char **argv)
       if (img)
       {
         decodedImg[framecnt] = (de265_image *)img;
+        decodedImg[framecnt]->convert_mv_info();
         printf("framecnt:%d\n", framecnt);
         if (measure_quality)
         {
@@ -924,7 +926,6 @@ int main(int argc, char **argv)
         else
           more = 1;
       }
-
       // show warnings
 
       for (;;)

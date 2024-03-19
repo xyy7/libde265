@@ -188,17 +188,17 @@ void drawTBgrid(const de265_image* srcimg, uint8_t* img, int stride,
   }
 }
 
-
-enum DrawMode {
-  Partitioning_CB,
-  Partitioning_TB,
-  Partitioning_PB,
-  IntraPredMode,
-  PBPredMode,
-  PBMotionVectors,
-  QuantP_Y
-};
-
+// #ifndef enum DrawMode
+// enum DrawMode {
+//   Partitioning_CB,
+//   Partitioning_TB,
+//   Partitioning_PB,
+//   IntraPredMode,
+//   PBPredMode,
+//   PBMotionVectors,
+//   QuantP_Y
+// };
+// #endif
 
 void tint_rect(uint8_t* img, int stride, int x0,int y0,int w,int h, uint32_t color, int pixelSize)
 {

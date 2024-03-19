@@ -42,6 +42,7 @@
 #include <fstream>
 #include <stdint.h>
 #include <typeinfo>
+using namespace std;
 
 // 定义一个检查类型的宏
 #define IS_UINT8(x) (sizeof(x) == sizeof(uint8_t))
@@ -53,6 +54,16 @@ enum PictureState
   UnusedForReference,
   UsedForShortTermReference,
   UsedForLongTermReference
+};
+
+enum DrawMode {
+  Partitioning_CB,
+  Partitioning_TB,
+  Partitioning_PB,
+  IntraPredMode,
+  PBPredMode,
+  PBMotionVectors,
+  QuantP_Y
 };
 
 /* TODO:
@@ -357,6 +368,17 @@ struct de265_image
         intraPredModeC = other.intraPredModeC;
         tu_info = other.tu_info;
         deblk_info = other.deblk_info;
+
+        vps = std::make_shared<const video_parameter_set>(*other.vps);
+        sps = std::make_shared<const seq_parameter_set>(*other.sps);
+        pps = std::make_shared<const pic_parameter_set>(*other.pps);
+        mv_f = other.mv_f;
+        mv_b = other.mv_b;
+        // cIdx = other.cIdx;
+        width = other.width;
+        chroma_width = other.chroma_width;
+        height = other.height;
+        chroma_height = other.chroma_height;
         }
         return *this;
   }
@@ -556,12 +578,14 @@ public:
   std::shared_ptr<const pic_parameter_set> pps; // the PPS used for decoding this image
 
   MetaDataArray<CTB_info> ctb_info;
-  MetaDataArray<CB_ref_info> cb_info;
-  MetaDataArray<PBMotion> pb_info;
-  MetaDataArray<uint8_t> intraPredMode;
-  MetaDataArray<uint8_t> intraPredModeC;
-  MetaDataArray<uint8_t> tu_info;
-  MetaDataArray<uint8_t> deblk_info;
+  MetaDataArray<CB_ref_info> cb_info;    //qp可能需要保存
+  MetaDataArray<PBMotion> pb_info;       //运动向量/帧间预测模式需要保存
+  std::vector<std::vector<std::array<int, 3>>> mv_f;
+  std::vector<std::vector<std::array<int, 3>>> mv_b;
+  MetaDataArray<uint8_t> intraPredMode; // 帧内预测模式
+  MetaDataArray<uint8_t> intraPredModeC; 
+  MetaDataArray<uint8_t> tu_info;        //tb信息可能就是残差
+  MetaDataArray<uint8_t> deblk_info;     //滤波参数
 
 public:
   // --- meta information ---
@@ -1078,7 +1102,8 @@ public:
   }
 
   void set_mv_info(int x, int y, int nPbW, int nPbH, const PBMotion &mv);
-
+  void convert_mv_info();
+  void PB_repeat(int x0,int y0, int w,int h, enum DrawMode what);
   // --- value logging ---
 
   void printBlk(int x0, int y0, int cIdx, int log2BlkSize);

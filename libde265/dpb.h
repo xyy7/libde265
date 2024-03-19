@@ -109,8 +109,8 @@ private:
 
   std::vector<struct de265_image*> dpb; // decoded picture buffer
 
-  std::vector<struct de265_image*> reorder_output_queue;
-  std::deque<struct de265_image*>  image_output_queue;
+  std::vector<struct de265_image*> reorder_output_queue;  
+  std::deque<struct de265_image*>  image_output_queue;    
 
 private:
   decoded_picture_buffer(const decoded_picture_buffer&); // no copy

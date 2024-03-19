@@ -493,7 +493,7 @@ de265_error de265_image::alloc_image(int w, int h, enum de265_chroma c,
 
     // deblk info
 
-    int deblk_w = (sps->pic_width_in_luma_samples + 3) / 4;
+    int deblk_w = (sps->pic_width_in_luma_samples + 3) / 4; //向上取整，去方块滤波信息
     int deblk_h = (sps->pic_height_in_luma_samples + 3) / 4;
 
     mem_alloc_success &= deblk_info.alloc(deblk_w, deblk_h, 2);
@@ -858,6 +858,101 @@ void de265_image::set_mv_info(int x, int y, int nPbW, int nPbH, const PBMotion &
       pb_info[xPu + pbx + (yPu + pby) * stride] = mv;
     }
 }
+
+void de265_image::convert_mv_info(){
+  printf("convert_mv_info.\n");
+  const seq_parameter_set &sps = this->get_sps();
+  printf("get_sps %p.\n",&sps);
+
+  int minCbSize = sps.MinCbSizeY;  //8
+  const int W = this->get_width();
+  const int H = this->get_height();
+  mv_b.resize(H, std::vector<std::array<int, 3>>(W));
+  mv_f.resize(H, std::vector<std::array<int, 3>>(W));
+
+  for (int y0=0;y0<sps.PicHeightInMinCbsY;y0++)  //30*8 240 
+    for (int x0=0;x0<sps.PicWidthInMinCbsY;x0++) //40*8 320
+      {
+        int log2CbSize = this->get_log2CbSize_cbUnits(x0,y0);
+        if (log2CbSize==0) {
+          continue;
+        }
+        //xb,yb,左上角位置，不同的partmode，同一个宏块里面，左上角位置也不同
+        int xb = x0*minCbSize; 
+        int yb = y0*minCbSize;
+
+        int CbSize = 1<<log2CbSize;
+
+        enum DrawMode what = PBMotionVectors;
+        enum PartMode partMode = this->get_PartMode(xb, yb);
+
+        int HalfCbSize = (1<<(log2CbSize-1));
+
+        switch (partMode) {
+        case PART_2Nx2N:
+        PB_repeat(xb,yb,CbSize,CbSize, what);
+        break;
+        case PART_NxN:
+        PB_repeat(xb,           yb,           CbSize/2,CbSize/2, what);
+        PB_repeat(xb+HalfCbSize,yb,           CbSize/2,CbSize/2, what);
+        PB_repeat(xb           ,yb+HalfCbSize,CbSize/2,CbSize/2, what);
+        PB_repeat(xb+HalfCbSize,yb+HalfCbSize,CbSize/2,CbSize/2, what);
+        break;
+        case PART_2NxN:
+        PB_repeat(xb,           yb,           CbSize  ,CbSize/2, what);
+        PB_repeat(xb,           yb+HalfCbSize,CbSize  ,CbSize/2, what);
+        break;
+        case PART_Nx2N:
+        PB_repeat(xb,           yb,           CbSize/2,CbSize, what);
+        PB_repeat(xb+HalfCbSize,yb,           CbSize/2,CbSize, what);
+        break;
+        case PART_2NxnU:
+        PB_repeat(xb,           yb,           CbSize  ,CbSize/4,   what);
+        PB_repeat(xb,           yb+CbSize/4  ,CbSize  ,CbSize*3/4, what);
+        break;
+        case PART_2NxnD:
+        PB_repeat(xb,           yb,           CbSize  ,CbSize*3/4, what);
+        PB_repeat(xb,           yb+CbSize*3/4,CbSize  ,CbSize/4,   what);
+        break;
+        case PART_nLx2N:
+        PB_repeat(xb,           yb,           CbSize/4  ,CbSize, what);
+        PB_repeat(xb+CbSize/4  ,yb,           CbSize*3/4,CbSize, what);
+        break;
+        case PART_nRx2N:
+        PB_repeat(xb,           yb,           CbSize*3/4,CbSize, what);
+        PB_repeat(xb+CbSize*3/4,yb,           CbSize/4  ,CbSize, what);
+        break;
+        default:
+        assert(false);
+        break;
+        }
+    }
+
+}
+
+void de265_image::PB_repeat(int x0,int y0, int w,int h, enum DrawMode what){
+    const PBMotion& mvi = this->get_mv_info(x0,y0);
+    printf("PB_repeat...%d,%d,%d,%d\n",x0,y0,w,h);
+    printf("mvb.size():%d. mvb[0].size():%d ,%d,%d\n", mv_b.size(),mv_b[0].size(),x0+w,y0+h);
+    if (mvi.predFlag[0])
+    {
+      for (int x = x0; x < x0 + w;++x){
+        for (int y = y0; y < y0 + h;++y){
+          std::array<int,3> pixel_mv = { mvi.mv[0].x, y + mvi.mv[0].y,mvi.refIdx[0]};
+          mv_b[y][x] = pixel_mv;
+        }
+      }
+    }
+    if (mvi.predFlag[1]) {
+      for (int x = x0; x < x0 + w;++x){
+        for (int y = y0; y < y0 + h;++y){
+          std::array<int,3> pixel_mv = { mvi.mv[1].x, y + mvi.mv[1].y,mvi.refIdx[1]};
+          mv_f[y][x] = pixel_mv;
+        }
+      }
+    }
+}
+
 
 bool de265_image::available_zscan(int xCurr, int yCurr, int xN, int yN) const
 {
