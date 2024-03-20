@@ -2,7 +2,7 @@ import os
 
 
 # 输入文件名【C sprintf格式】，保存文件名，编解码器，码率
-def x265(input, output, codec="-c:v libx265 -f rawvideo", crf="-crf 23"):
+def x265(input, output, codec="-c:v libx265 -f rawvideo", crf="-crf 1"):
     cmd = f"ffmpeg -i {input} {codec} {crf} {output}"
     print(cmd)
     os.system(cmd)

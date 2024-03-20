@@ -379,7 +379,10 @@ struct de265_image
         chroma_width = other.chroma_width;
         height = other.height;
         chroma_height = other.chroma_height;
+        residuals = other.residuals;
+        predictions = other.predictions;
         }
+
         return *this;
   }
 
@@ -436,6 +439,23 @@ struct de265_image
     int stride = get_image_stride(cIdx);
     return (pixel_t *)(pixels[cIdx] + (xpos + ypos * stride) * sizeof(pixel_t));
   }
+
+//vector不够灵活
+  template <class pixel_t>
+  pixel_t *get_predictions_plane_at_pos_NEW(int cIdx, int xpos, int ypos)
+  {
+    int stride = get_image_stride(cIdx);
+    return (pixel_t *)(predictions[cIdx][(xpos + ypos * stride) * sizeof(pixel_t)]);
+  }
+
+  template <class pixel_t>
+  pixel_t *get_residuals_plane_at_pos_NEW(int cIdx, int xpos, int ypos)
+  {
+    int stride = get_image_stride(cIdx);
+    return (pixel_t *)(residuals[cIdx][(xpos + ypos * stride) * sizeof(pixel_t)]);
+  }
+
+   
 
   const uint8_t *get_image_plane_at_pos(int cIdx, int xpos, int ypos) const
   {
@@ -518,6 +538,8 @@ struct de265_image
   static uint32_t s_next_image_ID;
 
   uint8_t *pixels[3];
+  std::array<std::vector<int32_t>,3> residuals;
+  std::array<std::vector<uint8_t>,3> predictions;
   uint8_t bpp_shift[3]; // 0 for 8 bit, 1 for 16 bit
 
   enum de265_chroma chroma_format;
@@ -844,7 +866,7 @@ public:
     for (int tuy = tuY; tuy < tuY + width; tuy++)
       for (int tux = tuX; tux < tuX + width; tux++)
       {
-        tu_info[tux + tuy * tu_info.width_in_units] |= TU_FLAG_NONZERO_COEFF;
+        tu_info[tux + tuy * tu_info.width_in_units] |= TU_FLAG_NONZERO_COEFF; //#define TU_FLAG_NONZERO_COEFF (1 << 7)
       }
   }
 
@@ -1102,7 +1124,19 @@ public:
   }
 
   void set_mv_info(int x, int y, int nPbW, int nPbH, const PBMotion &mv);
+  void set_residuals(std::vector<int32_t>* rs){
+    for (int i = 0; i < 3;++i){
+      residuals[i] = std::vector<int32_t>(rs[i].size());
+    }
+  };
+  void set_predictions(std::vector<uint8_t>* ps){
+     for (int i = 0; i < 3;++i){
+      predictions[i] = std::vector<uint8_t>(ps[i].size());
+    }
+  };
+
   void convert_mv_info();
+  void convert_info();
   void PB_repeat(int x0,int y0, int w,int h, enum DrawMode what);
   // --- value logging ---
 

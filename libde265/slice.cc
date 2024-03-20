@@ -2918,7 +2918,7 @@ int residual_coding(thread_context* tctx,
                     int log2TrafoSize,
                     int cIdx)
 {
-  logtrace(LogSlice,"- residual_coding x0:%d y0:%d log2TrafoSize:%d cIdx:%d\n",x0,y0,log2TrafoSize,cIdx);
+  logtrace(LogSlice,"- residual_coding x0:%d y0:%d log2TrafoSize:%d cIdx:%d\n",x0,y0,log2TrafoSize,cIdx);  //transfrom size
 
   //slice_segment_header* shdr = tctx->shdr;
 
@@ -2929,7 +2929,7 @@ int residual_coding(thread_context* tctx,
   enum PredMode PredMode = img->get_pred_mode(x0,y0);
 
   if (cIdx==0) {
-    img->set_nonzero_coefficient(x0,y0,log2TrafoSize); //tu_info
+    img->set_nonzero_coefficient(x0,y0,log2TrafoSize); //tu_info, unit8的首位，设置为1
   }
 
 

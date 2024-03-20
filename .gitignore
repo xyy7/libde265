@@ -26,6 +26,7 @@ sherlock265-bak
 rec*/
 *log*
 *bak*
+*npy
 
 # MSVC
 *.sln

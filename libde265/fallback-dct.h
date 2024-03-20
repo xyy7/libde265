@@ -66,6 +66,7 @@ template <class pixel_t>
 void add_residual_fallback(pixel_t *dst, ptrdiff_t stride,
                            const int32_t* r, int nT, int bit_depth)
 {
+  printf("add_residual: %d,%d\n",stride,nT);
   for (int y=0;y<nT;y++)
     for (int x=0;x<nT;x++) {
       dst[y*stride+x] = Clip_BitDepth(dst[y*stride+x] + r[y*nT+x], bit_depth);

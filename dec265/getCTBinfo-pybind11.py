@@ -1,7 +1,10 @@
+import os
+
 import numpy as np
 
 import dec265
 
+DEBUG = False
 
 ## 测试是否正常析构
 def testOneTime1():
@@ -55,10 +58,25 @@ def saveCTBinfo(img, saveList, idx):
         pass
     if "mv_f" in saveList:
         mv_f = np.array(img.mv_f)
-        np.save(f"{idx}_mv_f.npy", mv_f)
+        if DEBUG:
+            print(idx, "mv_f", mv_f[:, :, 2].max(), mv_f[:, :, 2].min())
+        np.save(f"npy/{idx}_mv_f.npy", mv_f)
     if "mv_b" in saveList:
         mv_b = np.array(img.mv_b)
-        np.save(f"{idx}_mv_b.npy", mv_b)
+        if DEBUG:
+            print(idx, "mv_b", mv_b[:, :, 2].max(), mv_b[:, :, 2].min())
+        np.save(f"npy/{idx}_mv_b.npy", mv_b)
+    if "residual" in saveList:
+        residuals = np.array(img.residuals)
+        if DEBUG:
+            print(idx, "residuals", residuals.max(), residuals.min(), residuals.mean())
+        np.save(f"npy/{idx}_residuals.npy", residuals)
+    if "prediction" in saveList:
+        predictions = np.array(img.predictions)
+        if DEBUG:
+            print(idx, "predictions", predictions.max(), predictions.min(), predictions.mean())
+        np.save(f"npy/{idx}_predictions.npy", predictions)
+
     # size = (n, h, w)
     # cb_info =
     # ctb_info =
@@ -73,7 +91,8 @@ def saveCTBinfo(img, saveList, idx):
 def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h265"):
     imglist = dec265.VectorDe265ImagePointer()
     res = dec265.getCTBinfo(imglist, filename)
-    saveList = ["mv_f", "mv_b"]
+    saveList = ["mv_f", "mv_b", "residual", "prediction"]
+    os.makedirs("npy", exist_ok=True)
     for i, img in enumerate(imglist):
         saveCTBinfo(img, saveList, i)
         if i > 5:
@@ -81,6 +100,7 @@ def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h
 
 
 if __name__ == "__main__":
+    DEBUG = True
     # testOneTime()
     # testOneTimeSTLbind()
 

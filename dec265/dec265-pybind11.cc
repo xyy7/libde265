@@ -1417,7 +1417,9 @@ PYBIND11_MODULE(dec265, m)
       .def_readwrite("SubWidthC", &de265_image::SubWidthC)
       .def_readwrite("SubHeightC", &de265_image::SubHeightC)
       .def_readwrite("mv_f", &de265_image::mv_f)
-      .def_readwrite("mv_b", &de265_image::mv_b);
+      .def_readwrite("mv_b", &de265_image::mv_b)
+      .def_readwrite("predictions", &de265_image::predictions)
+      .def_readwrite("residuals", &de265_image::residuals);
   py::class_<MetaDataArray<uint8_t>>(m, "MetaDataArrayUint8")
       .def_readwrite("data", &MetaDataArray<uint8_t>::data) // uint8数组指针可以
       .def_readwrite("data_size", &MetaDataArray<uint8_t>::data_size)

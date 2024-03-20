@@ -217,7 +217,7 @@ void transform_coefficients(acceleration_functions* acceleration,
                             pixel_t* dst, int dstStride, int bit_depth)
 {
   logtrace(LogTransform,"transform --- trType: %d nT: %d\n",trType,nT);
-
+  // printf("transform.cc transform_coefficients\n");
 
   if (trType==1) {
 
@@ -267,8 +267,8 @@ void transform_coefficients_explicit(thread_context* tctx,
                                      pixel_t* dst, int dstStride, int bit_depth, int cIdx)
 {
   logtrace(LogTransform,"transform --- trType: %d nT: %d\n",trType,nT);
-
-  const acceleration_functions* acceleration = &tctx->decctx->acceleration;
+  // printf("transform.cc transform_coefficients_explicit\n");
+  const acceleration_functions *acceleration = &tctx->decctx->acceleration;
 
   int32_t residual_buffer[32*32];
   int32_t* residual;
@@ -307,7 +307,6 @@ void transform_coefficients_explicit(thread_context* tctx,
 
     //printBlk("cross-comp-pred modified residual",residual,nT,nT);
   }
-
   acceleration->add_residual(dst,dstStride, residual,nT, bit_depth);
 }
 
@@ -366,6 +365,7 @@ void scale_coefficients_internal(thread_context* tctx,
                                  int nT, int cIdx,
                                  bool transform_skip_flag, bool intra, int rdpcmMode)
 {
+  // printf("transform.cc scale_coefficients_internal\n");
   const seq_parameter_set& sps = tctx->img->get_sps();
   const pic_parameter_set& pps = tctx->img->get_pps();
 
@@ -386,13 +386,14 @@ void scale_coefficients_internal(thread_context* tctx,
   coeff = tctx->coeffBuf;
   coeffStride = nT;
 
-
-
-
-
   pixel_t* pred;
+  pixel_t* real_preds;
+  pixel_t* residuals;
+
   int      stride;
   pred = tctx->img->get_image_plane_at_pos_NEW<pixel_t>(cIdx, xT,yT);
+  // real_preds = tctx->img->get_predictions_plane_at_pos_NEW<pixel_t>(cIdx, xT,yT);
+  // residuals = tctx->img->get_residuals_plane_at_pos_NEW<pixel_t>(cIdx, xT,yT);
   stride = tctx->img->get_image_stride(cIdx);
 
   // We explicitly include the case for sizeof(pixel_t)==1 so that the compiler
@@ -578,8 +579,14 @@ void scale_coefficients_internal(thread_context* tctx,
           cross_comp_pred(tctx, residual, nT);
         }
       }
-
-      tctx->decctx->acceleration.add_residual(pred,stride, residual,nT, bit_depth);
+      // //save predict and reisual
+      // for (int y = 0; y < nT;y++){
+      //   for (int x = 0; x < nT;x++){
+      //     real_preds[y * stride + x] = pred[y * nT + x];
+      //     residuals[y * stride + x] = residual[y * nT + x];
+      //   }
+      // }
+      tctx->decctx->acceleration.add_residual(pred, stride, residual, nT, bit_depth);
 
       if (rotateCoeffs) {
         memset(coeff, 0, nT*nT*sizeof(int16_t)); // delete all, because we moved the coeffs around
@@ -598,8 +605,20 @@ void scale_coefficients_internal(thread_context* tctx,
 
       assert(rdpcmMode==0);
 
-
-      if (tctx->img->get_pps().range_extension.cross_component_prediction_enabled_flag) {
+      // printf("call transform_coefficients_explicit branch %d %d %d.\n",stride,nT, coeffStride);
+      int start_pos = xT+yT*stride;
+      for (int y = 0; y < nT;y++)
+      {
+        for (int x = 0; x < nT;x++)
+        {
+          // real_preds[y * stride + x] = pred[y * stride + x];
+          tctx->img->predictions[cIdx][start_pos+y * stride + x]=
+          pred[y * stride + x];
+        }
+      }
+      //pred is pred pixels.
+      if (tctx->img->get_pps().range_extension.cross_component_prediction_enabled_flag)
+      {
         // cross-component-prediction: transform to residual buffer and add in a separate step
 
         transform_coefficients_explicit(tctx, coeff, coeffStride, nT, trType,
@@ -608,6 +627,18 @@ void scale_coefficients_internal(thread_context* tctx,
       else {
         transform_coefficients(&tctx->decctx->acceleration, coeff, coeffStride, nT, trType,
                                pred, stride, bit_depth);
+      }
+      //pred is decoded pixels.
+      for (int y = 0; y < nT;y++)
+      {
+        for (int x = 0; x < nT;x++)
+        {
+          // residuals[y * stride + x] = pred[y * stride + x]-real_preds[y * stride + x];
+          int cur_pos = y * stride + x;
+          pred[y * stride + x];
+          tctx->img->residuals[cIdx][start_pos+cur_pos]=
+          pred[cur_pos]-tctx->img->predictions[cIdx][start_pos+cur_pos];
+        }
       }
     }
   }
@@ -625,11 +656,11 @@ void scale_coefficients_internal(thread_context* tctx,
     logtrace(LogTransform,"*\n");
   }
 
-  // zero out scrap coefficient buffer again
+    // zero out scrap coefficient buffer again
 
-  for (int i=0;i<tctx->nCoeff[cIdx];i++) {
-    tctx->coeffBuf[ tctx->coeffPos[cIdx][i] ] = 0;
-  }
+    for (int i=0;i<tctx->nCoeff[cIdx];i++) {
+      tctx->coeffBuf[ tctx->coeffPos[cIdx][i] ] = 0;
+    }
 }
 
 
@@ -641,6 +672,7 @@ void scale_coefficients(thread_context* tctx,
                         int rdpcmMode // 0 - off, 1 - Horizontal, 2 - Vertical
                         )
 {
+  //是否超过8bit编码
   if (tctx->img->high_bit_depth(cIdx)) {
     scale_coefficients_internal<uint16_t>(tctx, xT,yT, x0,y0, nT,cIdx, transform_skip_flag, intra,
                                           rdpcmMode);
