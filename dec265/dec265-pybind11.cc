@@ -924,7 +924,8 @@ std::vector<de265_image*>& getCTBinfo(std::vector<de265_image*> &decodedImg, con
         de265_image *tmp = new de265_image;
         // img->convert_mv_info(); //const pointer cann't call non-const function.
         *tmp = *img;
-        tmp->convert_mv_info();
+        // tmp->convert_mv_info(); //only mv
+        tmp->convert_info();  // mv and qp_y
         decodedImg.push_back(tmp);
         if (measure_quality)
         {
@@ -990,10 +991,10 @@ std::vector<de265_image*>& getCTBinfo(std::vector<de265_image*> &decodedImg, con
     fprintf(stderr, "nFrames decoded: %d (%dx%d @ %5.2f fps)\n", framecnt,
             width, height, framecnt / secs);
 
-  for (int i = 0; i < decodedImg.size(); ++i)
-  {
-    printf("create %d %p\n", i, decodedImg[i]);
-  }
+  // for (int i = 0; i < decodedImg.size(); ++i)
+  // {
+  //   printf("create %d %p\n", i, decodedImg[i]);
+  // }
   framecnt = 0;
   
   return decodedImg;
@@ -1419,7 +1420,8 @@ PYBIND11_MODULE(dec265, m)
       .def_readwrite("mv_f", &de265_image::mv_f)
       .def_readwrite("mv_b", &de265_image::mv_b)
       .def_readwrite("predictions", &de265_image::predictions)
-      .def_readwrite("residuals", &de265_image::residuals);
+      .def_readwrite("residuals", &de265_image::residuals)
+      .def_readwrite("quantPYs", &de265_image::quantPYs);
   py::class_<MetaDataArray<uint8_t>>(m, "MetaDataArrayUint8")
       .def_readwrite("data", &MetaDataArray<uint8_t>::data) // uint8数组指针可以
       .def_readwrite("data_size", &MetaDataArray<uint8_t>::data_size)

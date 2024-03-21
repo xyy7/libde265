@@ -379,8 +379,10 @@ struct de265_image
         chroma_width = other.chroma_width;
         height = other.height;
         chroma_height = other.chroma_height;
+        chroma_format = other.chroma_format;
         residuals = other.residuals;
         predictions = other.predictions;
+        quantPYs = other.quantPYs;
         }
 
         return *this;
@@ -587,6 +589,7 @@ public:
   MetaDataArray<PBMotion> pb_info;        //运动向量/帧间预测模式需要保存
   std::vector<std::vector<std::array<int, 3>>> mv_f;
   std::vector<std::vector<std::array<int, 3>>> mv_b;
+  std::vector<std::vector<int>> quantPYs;
   MetaDataArray<uint8_t> intraPredMode;  
   MetaDataArray<uint8_t> intraPredModeC; 
   MetaDataArray<uint8_t> tu_info;       

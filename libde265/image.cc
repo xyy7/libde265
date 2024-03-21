@@ -137,7 +137,7 @@ static int de265_image_get_buffer(de265_decoder_context *ctx,
   //ALLOC_ALIGNED_16: memalign((alignment), (size))
   p[0] = (uint8_t *)ALLOC_ALIGNED_16(luma_height * luma_bpl + MEMORY_PADDING);
 
-  // printf("de265_image_get_buffer:aligment %d, luma stride %d, lumah, bpl %d %d, chroma hw %d %d\n",spec->alignment, luma_stride,luma_height, luma_bpl, chroma_height, chroma_bpl);
+ 
 
 
   residuals[0] = std::vector<int32_t>(luma_height * luma_bpl);
@@ -180,7 +180,9 @@ static int de265_image_get_buffer(de265_decoder_context *ctx,
 
     return 0;
   }
-
+  
+  // printf("de265_image_get_buffer:aligment %d, luma stride %d, lumah, bpl %d %d, chroma hw %d %d\n",spec->alignment, luma_stride,luma_height, luma_bpl, chroma_height, chroma_bpl);
+  // printf("luma_stride, chroma_stride: %d,%d", luma_stride,chroma_stride);
   img->set_image_plane(0, p[0], luma_stride, NULL);
   img->set_image_plane(1, p[1], chroma_stride, NULL);
   img->set_image_plane(2, p[2], chroma_stride, NULL);
@@ -542,7 +544,7 @@ de265_error de265_image::alloc_image(int w, int h, enum de265_chroma c,
 
 de265_image::~de265_image()
 {
-  printf("release this %p\n",this);
+  // printf("release this %p\n",this);
   release();
 
   // free progress locks
@@ -952,8 +954,9 @@ void de265_image::convert_info(){
   int minCbSize = sps.MinCbSizeY;  //8
   const int W = this->get_width();
   const int H = this->get_height();
-  mv_b.resize(H, std::vector<std::array<int, 3>>(W));
-  mv_f.resize(H, std::vector<std::array<int, 3>>(W));
+  mv_b.resize(W, std::vector<std::array<int, 3>>(H));
+  mv_f.resize(W, std::vector<std::array<int, 3>>(H));
+  quantPYs.resize(W,std::vector<int>(H));
 
   for (int y0=0;y0<sps.PicHeightInMinCbsY;y0++)  //30*8 240 
     for (int x0=0;x0<sps.PicWidthInMinCbsY;x0++) //40*8 320
@@ -967,74 +970,82 @@ void de265_image::convert_info(){
         int yb = y0*minCbSize;
 
         int CbSize = 1<<log2CbSize;
-
-        
+        PB_repeat(xb,yb,CbSize,CbSize, QuantP_Y);
         enum PartMode partMode = this->get_PartMode(xb, yb);
-
         int HalfCbSize = (1<<(log2CbSize-1));
-
         switch (partMode) {
-        case PART_2Nx2N:
-        PB_repeat(xb,yb,CbSize,CbSize, what);
-        break;
-        case PART_NxN:
-        PB_repeat(xb,           yb,           CbSize/2,CbSize/2, what);
-        PB_repeat(xb+HalfCbSize,yb,           CbSize/2,CbSize/2, what);
-        PB_repeat(xb           ,yb+HalfCbSize,CbSize/2,CbSize/2, what);
-        PB_repeat(xb+HalfCbSize,yb+HalfCbSize,CbSize/2,CbSize/2, what);
-        break;
-        case PART_2NxN:
-        PB_repeat(xb,           yb,           CbSize  ,CbSize/2, what);
-        PB_repeat(xb,           yb+HalfCbSize,CbSize  ,CbSize/2, what);
-        break;
-        case PART_Nx2N:
-        PB_repeat(xb,           yb,           CbSize/2,CbSize, what);
-        PB_repeat(xb+HalfCbSize,yb,           CbSize/2,CbSize, what);
-        break;
-        case PART_2NxnU:
-        PB_repeat(xb,           yb,           CbSize  ,CbSize/4,   what);
-        PB_repeat(xb,           yb+CbSize/4  ,CbSize  ,CbSize*3/4, what);
-        break;
-        case PART_2NxnD:
-        PB_repeat(xb,           yb,           CbSize  ,CbSize*3/4, what);
-        PB_repeat(xb,           yb+CbSize*3/4,CbSize  ,CbSize/4,   what);
-        break;
-        case PART_nLx2N:
-        PB_repeat(xb,           yb,           CbSize/4  ,CbSize, what);
-        PB_repeat(xb+CbSize/4  ,yb,           CbSize*3/4,CbSize, what);
-        break;
-        case PART_nRx2N:
-        PB_repeat(xb,           yb,           CbSize*3/4,CbSize, what);
-        PB_repeat(xb+CbSize*3/4,yb,           CbSize/4  ,CbSize, what);
-        break;
-        default:
-        assert(false);
-        break;
+          case PART_2Nx2N:
+          PB_repeat(xb,yb,CbSize,CbSize, what);
+          break;
+          case PART_NxN:
+          PB_repeat(xb,           yb,           CbSize/2,CbSize/2, what);
+          PB_repeat(xb+HalfCbSize,yb,           CbSize/2,CbSize/2, what);
+          PB_repeat(xb           ,yb+HalfCbSize,CbSize/2,CbSize/2, what);
+          PB_repeat(xb+HalfCbSize,yb+HalfCbSize,CbSize/2,CbSize/2, what);
+          break;
+          case PART_2NxN:
+          PB_repeat(xb,           yb,           CbSize  ,CbSize/2, what);
+          PB_repeat(xb,           yb+HalfCbSize,CbSize  ,CbSize/2, what);
+          break;
+          case PART_Nx2N:
+          PB_repeat(xb,           yb,           CbSize/2,CbSize, what);
+          PB_repeat(xb+HalfCbSize,yb,           CbSize/2,CbSize, what);
+          break;
+          case PART_2NxnU:
+          PB_repeat(xb,           yb,           CbSize  ,CbSize/4,   what);
+          PB_repeat(xb,           yb+CbSize/4  ,CbSize  ,CbSize*3/4, what);
+          break;
+          case PART_2NxnD:
+          PB_repeat(xb,           yb,           CbSize  ,CbSize*3/4, what);
+          PB_repeat(xb,           yb+CbSize*3/4,CbSize  ,CbSize/4,   what);
+          break;
+          case PART_nLx2N:
+          PB_repeat(xb,           yb,           CbSize/4  ,CbSize, what);
+          PB_repeat(xb+CbSize/4  ,yb,           CbSize*3/4,CbSize, what);
+          break;
+          case PART_nRx2N:
+          PB_repeat(xb,           yb,           CbSize*3/4,CbSize, what);
+          PB_repeat(xb+CbSize*3/4,yb,           CbSize/4  ,CbSize, what);
+          break;
+          default:
+          assert(false);
+          break;
         }
     }
-
 }
 
 void de265_image::PB_repeat(int x0,int y0, int w,int h, enum DrawMode what){
     const PBMotion& mvi = this->get_mv_info(x0,y0);
     // printf("PB_repeat...%d,%d,%d,%d\n",x0,y0,w,h);
     // printf("mvb.size():%d. mvb[0].size():%d ,%d,%d\n", mv_b.size(),mv_b[0].size(),x0+w,y0+h);
-    if (mvi.predFlag[0])
-    {
-      for (int x = x0; x < x0 + w;++x){
-        for (int y = y0; y < y0 + h;++y){
-          std::array<int,3> pixel_mv = { mvi.mv[0].x, mvi.mv[0].y,mvi.refIdx[0]};
-          mv_b[y][x] = pixel_mv;
+
+    if(what == PBMotionVectors){
+      if (mvi.predFlag[0])
+      {
+        for (int x = x0; x < x0 + w;++x){
+          for (int y = y0; y < y0 + h;++y){
+            std::array<int,3> pixel_mv = { mvi.mv[0].x, mvi.mv[0].y,mvi.refIdx[0]};
+            mv_b[x][y] = pixel_mv;
+          }
+        }
+      }
+      if (mvi.predFlag[1]) {
+        for (int x = x0; x < x0 + w;++x){
+          for (int y = y0; y < y0 + h;++y){
+            std::array<int,3> pixel_mv = { mvi.mv[1].x, mvi.mv[1].y,mvi.refIdx[1]};
+            mv_f[x][y] = pixel_mv;
+          }
         }
       }
     }
-    if (mvi.predFlag[1]) {
+    else if (what == QuantP_Y)
+    {
+      int qp = get_QPY(x0, y0);
       for (int x = x0; x < x0 + w;++x){
-        for (int y = y0; y < y0 + h;++y){
-          std::array<int,3> pixel_mv = { mvi.mv[1].x, mvi.mv[1].y,mvi.refIdx[1]};
-          mv_f[y][x] = pixel_mv;
+          for (int y = y0; y < y0 + h;++y){
+            quantPYs[x][y] = qp;
+          }
         }
-      }
     }
 }
 
