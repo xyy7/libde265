@@ -440,23 +440,6 @@ struct de265_image
     return (pixel_t *)(pixels[cIdx] + (xpos + ypos * stride) * sizeof(pixel_t));
   }
 
-//vector不够灵活
-  template <class pixel_t>
-  pixel_t *get_predictions_plane_at_pos_NEW(int cIdx, int xpos, int ypos)
-  {
-    int stride = get_image_stride(cIdx);
-    return (pixel_t *)(predictions[cIdx][(xpos + ypos * stride) * sizeof(pixel_t)]);
-  }
-
-  template <class pixel_t>
-  pixel_t *get_residuals_plane_at_pos_NEW(int cIdx, int xpos, int ypos)
-  {
-    int stride = get_image_stride(cIdx);
-    return (pixel_t *)(residuals[cIdx][(xpos + ypos * stride) * sizeof(pixel_t)]);
-  }
-
-   
-
   const uint8_t *get_image_plane_at_pos(int cIdx, int xpos, int ypos) const
   {
     int stride = get_image_stride(cIdx);
@@ -600,13 +583,13 @@ public:
   std::shared_ptr<const pic_parameter_set> pps; // the PPS used for decoding this image
 
   MetaDataArray<CTB_info> ctb_info;
-  MetaDataArray<CB_ref_info> cb_info;    //qp可能需要保存
-  MetaDataArray<PBMotion> pb_info;       //运动向量/帧间预测模式需要保存
+  MetaDataArray<CB_ref_info> cb_info;    
+  MetaDataArray<PBMotion> pb_info;        //运动向量/帧间预测模式需要保存
   std::vector<std::vector<std::array<int, 3>>> mv_f;
   std::vector<std::vector<std::array<int, 3>>> mv_b;
-  MetaDataArray<uint8_t> intraPredMode; // 帧内预测模式
+  MetaDataArray<uint8_t> intraPredMode;  
   MetaDataArray<uint8_t> intraPredModeC; 
-  MetaDataArray<uint8_t> tu_info;        //tb信息可能就是残差
+  MetaDataArray<uint8_t> tu_info;       
   MetaDataArray<uint8_t> deblk_info;     //滤波参数
 
 public:
@@ -1136,7 +1119,7 @@ public:
   };
 
   void convert_mv_info();
-  void convert_info();
+  void convert_info(); //相比于convert_mv_info 应该更加广泛。
   void PB_repeat(int x0,int y0, int w,int h, enum DrawMode what);
   // --- value logging ---
 

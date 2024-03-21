@@ -635,7 +635,6 @@ void scale_coefficients_internal(thread_context* tctx,
         {
           // residuals[y * stride + x] = pred[y * stride + x]-real_preds[y * stride + x];
           int cur_pos = y * stride + x;
-          pred[y * stride + x];
           tctx->img->residuals[cIdx][start_pos+cur_pos]=
           pred[cur_pos]-tctx->img->predictions[cIdx][start_pos+cur_pos];
         }

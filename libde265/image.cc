@@ -1023,7 +1023,7 @@ void de265_image::PB_repeat(int x0,int y0, int w,int h, enum DrawMode what){
     {
       for (int x = x0; x < x0 + w;++x){
         for (int y = y0; y < y0 + h;++y){
-          std::array<int,3> pixel_mv = { mvi.mv[0].x, y + mvi.mv[0].y,mvi.refIdx[0]};
+          std::array<int,3> pixel_mv = { mvi.mv[0].x, mvi.mv[0].y,mvi.refIdx[0]};
           mv_b[y][x] = pixel_mv;
         }
       }
@@ -1031,7 +1031,7 @@ void de265_image::PB_repeat(int x0,int y0, int w,int h, enum DrawMode what){
     if (mvi.predFlag[1]) {
       for (int x = x0; x < x0 + w;++x){
         for (int y = y0; y < y0 + h;++y){
-          std::array<int,3> pixel_mv = { mvi.mv[1].x, y + mvi.mv[1].y,mvi.refIdx[1]};
+          std::array<int,3> pixel_mv = { mvi.mv[1].x, mvi.mv[1].y,mvi.refIdx[1]};
           mv_f[y][x] = pixel_mv;
         }
       }

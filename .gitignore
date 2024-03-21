@@ -27,6 +27,7 @@ rec*/
 *log*
 *bak*
 *npy
+!lib265_code_summary.png
 
 # MSVC
 *.sln
