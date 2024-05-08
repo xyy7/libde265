@@ -1032,7 +1032,7 @@ de265_error decoder_context::decode_slice_unit_WPP(image_unit *imgunit,
 
     // prepare thread context
 
-    thread_context *tctx = sliceunit->get_thread_context(entryPt);
+    thread_context *tctx = sliceunit->get_thread_context(entryPt);  
 
     tctx->shdr = shdr;
     tctx->decctx = img->decctx;

@@ -264,7 +264,7 @@ de265_error NAL_Parser::push_data(const unsigned char *data, int len,
 {
   end_of_frame = false;
 
-  if (pending_input_NAL == NULL)
+  if (pending_input_NAL == NULL)  // 不存在读取了一部分内容的NAL_unit
   {
     pending_input_NAL = alloc_NAL_unit(len + 3);
     if (pending_input_NAL == NULL)
@@ -275,7 +275,7 @@ de265_error NAL_Parser::push_data(const unsigned char *data, int len,
     pending_input_NAL->user_data = user_data;
   }
 
-  NAL_unit *nal = pending_input_NAL; // shortcut
+  NAL_unit *nal = pending_input_NAL; // shortcut  NAL_unit已经读取了一部分，但是还没有读完
 
   // Resize output buffer so that complete input would fit.
   // We add 3, because in the worst case 3 extra bytes are created for an input byte.
@@ -284,7 +284,7 @@ de265_error NAL_Parser::push_data(const unsigned char *data, int len,
     return DE265_ERROR_OUT_OF_MEMORY;
   }
 
-  unsigned char *out = nal->data() + nal->size();
+  unsigned char *out = nal->data() + nal->size(); // char* +偏移量
 
   for (int i = 0; i < len; i++)
   {
@@ -384,7 +384,7 @@ de265_error NAL_Parser::push_data(const unsigned char *data, int len,
         ;
 
         // push this NAL decoder queue
-        push_to_NAL_queue(nal);
+        push_to_NAL_queue(nal);  //读着，读着，读完了，开辟一个新的pending_NAL_unit
 
         // initialize new, empty NAL unit
 

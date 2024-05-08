@@ -144,7 +144,6 @@ class NAL_Parser
 
 
   // pool of unused NAL memory
-
   std::vector<NAL_unit*> NAL_free_list;  // maximum size: DE265_NAL_FREE_LIST_SIZE
 
   LIBDE265_CHECK_RESULT NAL_unit* alloc_NAL_unit(int size);

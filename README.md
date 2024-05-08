@@ -12,7 +12,7 @@ See README.md for further information at https://github.com/strukturag/libde265.
 
 ![code_summary](lib265_code_summary.png)
 
-## 安装与编译
+## libde265安装与编译
 
 * ```
   sudo apt install cmake gcc g++ qt{4,5}-qmake libqt4-dev  # 安装qt4或者5都可以
@@ -45,20 +45,6 @@ See README.md for further information at https://github.com/strukturag/libde265.
   make
   ```
 
-  * https://blog.csdn.net/ww506772362/article/details/49093271 使用：
-
-  * 基本使用：
-
-    * 基本参数：
-
-      ```
-      ./dec265 输入文件 -o 输出文件
-      cd libde265/build/dec265
-      ./dec265 /data/chenminghui/libde265/testdata/girlshy.h265 -o result.yuv 
-      ```
-
-    * 其他参数：具体看dec265/dec265.cc文件
-
 * **libde265编译：**
 
   * ```
@@ -73,11 +59,68 @@ See README.md for further information at https://github.com/strukturag/libde265.
     make -j 8
     ```
 
-* **encoder：**
+* **encoder：**【需要自行获取编码器端】
 
   * ffmepg编码成h265码流
   * HEVC编码成h265码流
   * x265编码成h265码流
+
+## 解码码流
+
+* 基本使用：
+
+  * ```
+    sh make-main.sh
+    ```
+
+  * 具体参数：看dec265/dec265.cc文件
+
+  * 编译的库版本、路径是否正确，需要自行检查。
+
+* 也可以参考：https://blog.csdn.net/ww506772362/article/details/49093271 
+
+## 保存码流信息
+
+### pybind11安装与编译
+
+* 官方文档：https://pybind11.readthedocs.io/en/stable/advanced/classes.html
+* 加入了pybind11的库和python本身的库，在一定程度上进行数据类型转换。
+* 几乎是纯C++来定义数据类型，python可以直接调用。
+* 因为已经实现绑定，所以不需要声明函数使用`extern "C"` 进行编译。
+
+* 安装pybind11和python3.x-dev:
+
+  * ```
+    pip install pybind11
+    sudo apt install python3.x-dev # 版本号
+    ```
+
+* 查看头文件位置，查看库文件位置，链接库：【直接使用虚拟环境中的python是不行的】
+
+  * ```
+    -fPIC ${/usr/bin/python3.7-config --cflags} //可能需要在命令行执行
+    -L/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu -lpython3.7
+    ```
+
+* 注意生成库的名称和cc文件里面定义的名称要一致，要生成可以识别的后缀：
+
+  * ```
+    /data/chenminghui/test265/dec265/dec265.cpython-37m-x86_64-linux-gnu.so
+    ```
+
+  * ```
+    g++ -g -O2 -Werror=return-type -Werror=unused-result -Werror=reorder -std=gnu++11  -I/data/chenminghui/anaconda3/envs/invcomp/include -DDE265_LOG_ERROR -fPIC $(python3 -m pybind11 --includes) -shared -o dec265`python3-config --extension-suffix` dec265-dec265.o  ../libde265/.libs/libde265.so -lstdc++ -lpthread -lm 
+    ```
+
+### 基本使用：
+
+* ```
+  sh make-pybind11.sh
+  ```
+
+* 具体参数：解码的参数可以看dec265/dec265.cc文件，保存文件的格式看getCTBinfo-pybind11.py。
+
+* 编译的库版本、路径是否正确，需要自行检查。
 
 ## 码流变化：
 
@@ -91,6 +134,56 @@ See README.md for further information at https://github.com/strukturag/libde265.
 * 要把.bashrc的搜索路径改回来
   * 是否有一些图像处理的库有冲突或者版本对应问题，需要自行注意
 * 类和struct属性为方便使用改成public，是否需要改回来
+
+## 解码步骤
+
+### 传入NAL单元
+
+1. 读取NAL的length
+2. 读取NAL==》alloc单元==》set_data==》去除填充字节==》push进NAL队列
+   1. **NAL的动态池化思想**：
+      1. 有free_NAL_list，如果存在，那么可以直接使用。
+      2. 销毁NAL单元：如果free_NAL_list没有满，那么可以直接使用；如果满了才进行销毁。
+
+### 传入码流
+
+1.  读取buffer字节
+2.  **把buffer里面的东西，push到NAL_parser中** （有各种input_push_state来判断是否构建一个完整的NAL单元）
+    1. NAL_parser属于decoder_context
+3.  **decoder_context负责解码，解码完的部分存放在dpb中：【buffer\池化技术】**
+    1. dpb（decoded picture buffer）：如果没有需要解码的东西了，那么将reorder_buffer里面的img全部输入到output队列中
+    2. 关键就是解码NAL单元 decode_NAL：
+       1. 使用bitreader读取NAL头部
+       2. **当知道nal_unit_type<32的时候，读取slice**
+          1. 读取slice头部
+          2. **每张img可能由多个slice组成**【按照sequence可以更容易了解编码流程】
+          3. **每个slice由多个CTB组成【开始进行递归解码】**
+             1. 如果由SAO信息，那么也要读取SAO信息
+          4. **每个CTU由多个CU组成**（需要根据flag判断是否分块）
+             1. 读取量化等级，读取是否跳过量化flag
+          5. **读取PU**：
+             1. 帧间预测模式：读取MVP==》MV，引用帧
+             2. 帧内预测模式
+             3. 读取预测模式是如何分块的
+          6. **读取TU（残差）**：
+             1. PB是否继续拆分成TU
+             2. 读取扫描顺序【zscan等】
+             3. 解码DC系数和AC系数
+             4. **缩放残差系数**
+       3. nal_unit_type>=32的时候，读取vps、sps、pps、sei等
+4.  **decoder_context从dpb的 output队列中拿到解码完的图片**【YUV格式】
+
+### 可视化mv、残差、量化系数
+
+* scale_coefficients_internal函数：
+  * residual + prediction = decoded 
+* de265_image类中本来只保存了PB级别的**mv和qp**，自己实现convert_info函数，仿照visualize.cc文件中，根据flag进行repeat成帧的大小。
+
+* 将mv、residual、prediction、qp_y都保存在de265_image类中，然后通过pybind11传回python。
+
+### 哥伦布编码、CABAC编码、变换解码
+
+* 解码不仅包括熵解码，还包括经过各种变换、预测、量化、滤波等之后的解码。
 
 ## 代码解析
 
@@ -166,7 +259,7 @@ int qPYPrime, qPCbPrime, qPCrPrime;
   * 解析的时候可能是无符号的，那是因为能够通过各种flag，以及周围的像素进行推断。【需要保证存储的就直接是解析完后的数据】
   * 也不是简单的repeat就可以扩展到原始尺寸，猜测有一些可能还是通过比如全零标志的flag就能够存储，所以就没有还原那些数据。
 
-#### 解析mv
+#### 解析mv、QP
 
 * mv如何根据运动向量和引用，以及flag的状态，还原出三通道，且与原图大小相同的？
 
@@ -536,18 +629,18 @@ find_intra_pred_mode
 * 大部分属性的含义，可以从分配内存的时候理解
 
 * ```
-   MetaDataArray<CTB_info> ctb_info;
-   MetaDataArray<CB_ref_info> cb_info;    
-   MetaDataArray<PBMotion> pb_info;        //运动向量/帧间预测模式需要保存
-   std::vector<std::vector<std::array<int, 3>>> mv_f;
-   std::vector<std::vector<std::array<int, 3>>> mv_b;
-   MetaDataArray<uint8_t> intraPredMode;  
-   MetaDataArray<uint8_t> intraPredModeC; 
-   MetaDataArray<uint8_t> tu_info;       
-   MetaDataArray<uint8_t> deblk_info;     //滤波参数
-  
-  
-  
+  MetaDataArray<CTB_info> ctb_info;
+  MetaDataArray<CB_ref_info> cb_info;    
+  MetaDataArray<PBMotion> pb_info;        //运动向量/帧间预测模式需要保存
+  std::vector<std::vector<std::array<int, 3>>> mv_f;
+  std::vector<std::vector<std::array<int, 3>>> mv_b;
+  MetaDataArray<uint8_t> intraPredMode;  
+  MetaDataArray<uint8_t> intraPredModeC; 
+  MetaDataArray<uint8_t> tu_info;       
+  MetaDataArray<uint8_t> deblk_info;     //滤波参数
+  ```
+
+* ```
   uint8_t *pixels[3];
   std::array<std::vector<int32_t>,3> residuals;
   std::array<std::vector<uint8_t>,3> predictions;

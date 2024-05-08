@@ -1201,7 +1201,7 @@ de265_image* getCTBinfo1()
     // tid = (framecnt/1000) & 1;
     // de265_set_limit_TID(ctx, tid);
 
-    if (nal_input)
+    if (nal_input) //如果输入是NAL，那么直接进行解码
     {
       uint8_t len[4];
       int n = fread(len, 1, 4, fh);
