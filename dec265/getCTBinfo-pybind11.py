@@ -134,7 +134,7 @@ def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h
 
 
 if __name__ == "__main__":
-    DEBUG = False
+    DEBUG = True
     # testOneTime()
     # testOneTimeSTLbind()
 

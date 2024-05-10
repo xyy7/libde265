@@ -56,15 +56,16 @@ enum PictureState
   UsedForLongTermReference
 };
 
-enum DrawMode {
-  Partitioning_CB,
-  Partitioning_TB,
-  Partitioning_PB,
-  IntraPredMode,
-  PBPredMode,
-  PBMotionVectors,
-  QuantP_Y
+enum DrawModeRepeat {
+  Partitioning_CBRepeat,
+  Partitioning_TBRepeat,
+  Partitioning_PBRepeat,
+  // IntraPredMode_D,
+  PBPredModeRepeat,
+  PBMotionVectorsRepeat,
+  QuantP_YRepeat
 };
+
 
 /* TODO:
    At INTEGRITY_DERIVED_FROM_FAULTY_REFERENCE images, we can check the SEI hash, whether
@@ -1123,7 +1124,7 @@ public:
 
   void convert_mv_info();
   void convert_info(); //相比于convert_mv_info 应该更加广泛。
-  void PB_repeat(int x0,int y0, int w,int h, enum DrawMode what);
+  void PB_repeat(int x0,int y0, int w,int h, enum DrawModeRepeat what);
   // --- value logging ---
 
   void printBlk(int x0, int y0, int cIdx, int log2BlkSize);

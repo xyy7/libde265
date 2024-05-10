@@ -901,7 +901,7 @@ void de265_image::convert_mv_info(){
 
         int CbSize = 1<<log2CbSize;
 
-        enum DrawMode what = PBMotionVectors;
+        enum DrawModeRepeat what = PBMotionVectorsRepeat;
         enum PartMode partMode = this->get_PartMode(xb, yb);
 
         int HalfCbSize = (1<<(log2CbSize-1));
@@ -948,7 +948,7 @@ void de265_image::convert_mv_info(){
 }
 
 void de265_image::convert_info(){
-  enum DrawMode what = PBMotionVectors;
+  enum DrawModeRepeat what = PBMotionVectorsRepeat;
   const seq_parameter_set &sps = this->get_sps();
 
   int minCbSize = sps.MinCbSizeY;  //8
@@ -970,7 +970,7 @@ void de265_image::convert_info(){
         int yb = y0*minCbSize;
 
         int CbSize = 1<<log2CbSize;
-        PB_repeat(xb,yb,CbSize,CbSize, QuantP_Y);
+        PB_repeat(xb,yb,CbSize,CbSize, QuantP_YRepeat);
         enum PartMode partMode = this->get_PartMode(xb, yb);
         int HalfCbSize = (1<<(log2CbSize-1));
         switch (partMode) {
@@ -1014,12 +1014,12 @@ void de265_image::convert_info(){
     }
 }
 
-void de265_image::PB_repeat(int x0,int y0, int w,int h, enum DrawMode what){
+void de265_image::PB_repeat(int x0,int y0, int w,int h, enum DrawModeRepeat what){
     const PBMotion& mvi = this->get_mv_info(x0,y0);
     // printf("PB_repeat...%d,%d,%d,%d\n",x0,y0,w,h);
     // printf("mvb.size():%d. mvb[0].size():%d ,%d,%d\n", mv_b.size(),mv_b[0].size(),x0+w,y0+h);
 
-    if(what == PBMotionVectors){
+    if(what == PBMotionVectorsRepeat){
       if (mvi.predFlag[0])
       {
         for (int x = x0; x < x0 + w;++x){
@@ -1038,7 +1038,7 @@ void de265_image::PB_repeat(int x0,int y0, int w,int h, enum DrawMode what){
         }
       }
     }
-    else if (what == QuantP_Y)
+    else if (what == QuantP_YRepeat)
     {
       int qp = get_QPY(x0, y0);
       for (int x = x0; x < x0 + w;++x){

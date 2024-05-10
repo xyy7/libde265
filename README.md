@@ -70,6 +70,7 @@ See README.md for further information at https://github.com/strukturag/libde265.
 * 基本使用：
 
   * ```
+    cd dec265
     sh make-main.sh
     ```
 
@@ -83,9 +84,16 @@ See README.md for further information at https://github.com/strukturag/libde265.
 
 ### pybind11安装与编译
 
+```
+cd dec265
+```
+
 * 官方文档：https://pybind11.readthedocs.io/en/stable/advanced/classes.html
+
 * 加入了pybind11的库和python本身的库，在一定程度上进行数据类型转换。
+
 * 几乎是纯C++来定义数据类型，python可以直接调用。
+
 * 因为已经实现绑定，所以不需要声明函数使用`extern "C"` 进行编译。
 
 * 安装pybind11和python3.x-dev:
@@ -95,11 +103,11 @@ See README.md for further information at https://github.com/strukturag/libde265.
     sudo apt install python3.x-dev # 版本号
     ```
 
-* 查看头文件位置，查看库文件位置，链接库：【直接使用虚拟环境中的python是不行的】
+* 查看头文件位置，查看库文件位置，makefile中添加链接库：【直接使用虚拟环境中的python是不行的】
 
   * ```
-    -fPIC ${/usr/bin/python3.7-config --cflags} //可能需要在命令行执行
-    -L/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu -lpython3.7
+    -fPIC ${shell /usr/bin/python3.7-config --cflags} //命令行执行时不需要shell #加在CXXFLAGS后面
+    -L/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu -lpython3.7  #加在LIBS后面
     ```
 
 * 注意生成库的名称和cc文件里面定义的名称要一致，要生成可以识别的后缀：

@@ -615,7 +615,7 @@ int main(int argc, char **argv)
   decodedImgCount = 0;
   // deleteDecodedImg(decodedImg); // 需要注意这里释放的时间
 
-  const char *filename = "/data/chenminghui/test265/testdata/girlshy.h265";
+  // const char *filename = "/data/chenminghui/test265/testdata/girlshy.h265";
 
   while (1)
   {
@@ -776,15 +776,15 @@ int main(int argc, char **argv)
   }
 
   FILE *fh;
-  // if (strcmp(argv[optind], "-") == 0)
-  // {
-  //   fh = stdin;
-  // }
-  // else
-  // {
-  //   fh = fopen(argv[optind], "rb");
-  // }
-  fh = fopen(filename, "rb");
+  if (strcmp(argv[optind], "-") == 0)
+  {
+    fh = stdin;
+  }
+  else
+  {
+    fh = fopen(argv[optind], "rb");
+  }
+  // fh = fopen(filename, "rb");
 
   if (fh == NULL)
   {
@@ -912,9 +912,9 @@ int main(int argc, char **argv)
 
       if (img)
       {
-        decodedImg[framecnt] = (de265_image *)img;
-        decodedImg[framecnt]->convert_mv_info();
-        printf("framecnt:%d\n", framecnt);
+        // decodedImg[framecnt] = (de265_image *)img;
+        // decodedImg[framecnt]->convert_mv_info();
+        // printf("framecnt:%d\n", framecnt);
         if (measure_quality)
         {
           measure(img);
@@ -978,10 +978,10 @@ int main(int argc, char **argv)
     fprintf(stderr, "nFrames decoded: %d (%dx%d @ %5.2f fps)\n", framecnt,
             width, height, framecnt / secs);
 
-  for (int i = 0; i < framecnt; ++i)
-  {
-    printf("%d pointer: %p\n", i, decodedImg[i]);
-  }
+  // for (int i = 0; i < framecnt; ++i)
+  // {
+  //   printf("%d pointer: %p\n", i, decodedImg[i]);
+  // }
 
   return err == DE265_OK ? 0 : 10;
 }
