@@ -1419,6 +1419,7 @@ PYBIND11_MODULE(dec265, m)
       .def_readwrite("SubHeightC", &de265_image::SubHeightC)
       .def_readwrite("mv_f", &de265_image::mv_f)
       .def_readwrite("mv_b", &de265_image::mv_b)
+      .def_readwrite("slice_type", &de265_image::slice_type)
       .def_readwrite("predictions", &de265_image::predictions)
       .def_readwrite("residuals", &de265_image::residuals)
       .def_readwrite("quantPYs", &de265_image::quantPYs);

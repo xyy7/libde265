@@ -84,6 +84,7 @@ def saveCTBinfo(img, saveList, idx):
     if DEBUG:
         print("w,h,cw,ch:", img.width, img.height, img.chroma_width, img.chroma_height)
 
+
     if "mv_f" in saveList:
         mv_f = np.array(img.mv_f)
         if DEBUG:
@@ -122,15 +123,22 @@ def saveCTBinfo(img, saveList, idx):
     if idx == 1 and DEBUG:
         exit()
 
+def saveSliceType(img, slice_types):
+    slice_types.append(img.slice_type)
+
 
 def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h265"):
     imglist = dec265.VectorDe265ImagePointer()
+    slice_types = []
     res = dec265.getCTBinfo(imglist, filename)
     saveList = ["mv_f", "mv_b", "residual", "prediction", "qp_y"]
     os.makedirs("npy", exist_ok=True)
     print("frames: ", len(imglist))
     for i, img in enumerate(imglist):
-        saveCTBinfo(img, saveList, i)
+        # saveCTBinfo(img, saveList, i)
+        saveSliceType(img, slice_types)
+    np.save("slice_types",np.array(slice_types))
+
 
 
 if __name__ == "__main__":

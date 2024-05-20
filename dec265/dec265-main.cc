@@ -915,6 +915,7 @@ int main(int argc, char **argv)
         // decodedImg[framecnt] = (de265_image *)img;
         // decodedImg[framecnt]->convert_mv_info();
         // printf("framecnt:%d\n", framecnt);
+        // printf("slice num:%d %d\n",img->slices.size(),img->slices[0]->slice_type);
         if (measure_quality)
         {
           measure(img);

@@ -359,8 +359,10 @@ struct de265_image
           slice_segment_header *new_slice = new slice_segment_header(*slice);
           slices.push_back(new_slice);
         }
-        for (int i = 0; i < 3; ++i) {
-            bpp_shift[i] = other.bpp_shift[i];
+        slice_type = other.slice_type;
+        for (int i = 0; i < 3; ++i)
+        {
+          bpp_shift[i] = other.bpp_shift[i];
         }
         ctb_info = other.ctb_info;
         cb_info = other.cb_info;
@@ -503,6 +505,7 @@ struct de265_image
   {
     shdr->slice_index = slices.size();
     slices.push_back(shdr);
+    slice_type = shdr->slice_type;
   }
 
   bool available_zscan(int xCurr, int yCurr, int xN, int yN) const;
@@ -539,6 +542,7 @@ public:
   uint8_t BitDepth_Y, BitDepth_C;
   uint8_t SubWidthC, SubHeightC;
   std::vector<slice_segment_header *> slices;
+  int slice_type;
 
 public:
   // --- conformance cropping window ---
