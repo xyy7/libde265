@@ -347,8 +347,8 @@ struct de265_image
           }
         for (int i = 0; i < 3; ++i) {
             if (other.pixels_confwin[i] != nullptr) {
-                pixels_confwin[i] = new uint8_t[other.stride * other.height];
-                memcpy(pixels_confwin[i], other.pixels_confwin[i], other.stride * other.height);
+                pixels_confwin[i] = new uint8_t[other.width_confwin * other.height_confwin];
+                memcpy(pixels_confwin[i], other.pixels_confwin[i], other.width_confwin * other.height_confwin);
             } else {
                 pixels_confwin[i] = nullptr;
             }
@@ -386,6 +386,10 @@ struct de265_image
         residuals = other.residuals;
         predictions = other.predictions;
         quantPYs = other.quantPYs;
+        width_confwin = other.width_confwin;
+        height_confwin = other.height_confwin;
+        chroma_height_confwin = other.chroma_height_confwin;
+        chroma_width_confwin = other.chroma_width_confwin;
         }
 
         return *this;
@@ -1127,8 +1131,16 @@ public:
   };
 
   void convert_mv_info();
-  void convert_info(); //相比于convert_mv_info 应该更加广泛。
-  void PB_repeat(int x0,int y0, int w,int h, enum DrawModeRepeat what);
+
+  template< typename T>
+  void crop(std::vector<T> &vec, int left, int top, int pad_stride, int real_height, int real_width, int WinUnitX, int WinUnitY);
+
+  template <typename T>
+  void crop1(std::vector<std::vector<T>> &vec, int left, int top,int real_width, int real_height);
+
+  void convert_info(); // 相比于convert_mv_info 应该更加广泛。
+
+  void PB_repeat(int x0, int y0, int w, int h, enum DrawModeRepeat what);
   // --- value logging ---
 
   void printBlk(int x0, int y0, int cIdx, int log2BlkSize);

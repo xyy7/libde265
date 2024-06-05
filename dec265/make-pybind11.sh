@@ -1,4 +1,5 @@
 cd ../libde265
+make clean
 make -j8
 cd ../dec265
 rm dec265.cc

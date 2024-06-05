@@ -404,6 +404,8 @@ de265_error de265_image::alloc_image(int w, int h, enum de265_chroma c,
   height_confwin = height - (top + bottom) * WinUnitY;
   chroma_width_confwin = chroma_width - left - right;
   chroma_height_confwin = chroma_height - top - bottom;
+  //printf("logging: alloc_image: wc:%d,hc:%d,cwc:%d,chc:%d,w:%d,h:%d,l:%d,r:%d,t:%d,b:%d",
+        //  width_confwin,height_confwin,chroma_width_confwin,chroma_height_confwin,width,height,left,right,top,bottom);
 
   spec.crop_left = left * WinUnitX;
   spec.crop_right = right * WinUnitX;
@@ -947,7 +949,78 @@ void de265_image::convert_mv_info(){
     }
 }
 
+template< typename T>
+void de265_image::crop(std::vector<T> &vec, int left, int top, int pad_stride, int real_height, int real_width, int WinUnitX, int WinUnitY){
+  vec.erase(vec.begin(),vec.begin()+left * WinUnitX + top * WinUnitY * pad_stride);
+  vector<T> tmp = vec;
+  for (int y = 0; y < real_height; y++)
+  {
+    copy(vec.begin()+y * pad_stride, vec.begin()+y * pad_stride+real_width,tmp.begin()+y*real_width);
+  }
+  tmp.erase(tmp.begin()+real_width*real_height,tmp.end());
+  vec.swap(tmp);
+}
+
+template< typename T>
+void de265_image::crop1(std::vector<std::vector<T>>& vec, int left, int top, int real_width, int real_height){
+  vec.erase(vec.begin(),vec.begin()+left);
+  vec.erase(vec.begin()+real_width,vec.end());
+  for (int i = 0; i < vec.size();++i)
+  {
+    vec[i].erase(vec[i].begin(), vec[i].begin() + top);
+    vec[i].erase(vec[i].begin()+real_height, vec[i].end());
+  }
+}
+
+#pragma optimize( "", off )
 void de265_image::convert_info(){
+  //copy from alloc_image:
+  int WinUnitX, WinUnitY;
+
+  switch (chroma_format)
+  {
+  case de265_chroma_mono:
+    WinUnitX = 1;
+    WinUnitY = 1;
+    break;
+  case de265_chroma_420:
+    WinUnitX = 2;
+    WinUnitY = 2;
+    break;
+  case de265_chroma_422:
+    WinUnitX = 2;
+    WinUnitY = 1;
+    break;
+  case de265_chroma_444:
+    WinUnitX = 1;
+    WinUnitY = 1;
+    break;
+  default:
+    assert(0);
+  }
+
+  int left = sps ? sps->conf_win_left_offset : 0;
+  int right = sps ? sps->conf_win_right_offset : 0;
+  int top = sps ? sps->conf_win_top_offset : 0;
+  int bottom = sps ? sps->conf_win_bottom_offset : 0;
+  //printf("logging: convert_info: wc:%d,hc:%d,cwc:%d,chc:%d,w:%d,h:%d,l:%d,r:%d,t:%d,b:%d",
+        //  width_confwin,height_confwin,chroma_width_confwin,chroma_height_confwin,width,height,left,right,top,bottom);
+
+
+  crop(residuals[0], left, top, stride, height_confwin, width_confwin, WinUnitX, WinUnitY);
+
+  if (chroma_format != de265_chroma_mono)
+  {
+    crop(residuals[1], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin, 1, 1);
+    crop(residuals[2], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin, 1, 1);
+  }
+  crop(predictions[0], left, top, stride, height_confwin, width_confwin, WinUnitX, WinUnitY);
+  if (chroma_format != de265_chroma_mono)
+  {
+    crop(predictions[1], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin, 1, 1);
+    crop(predictions[2], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin, 1, 1);
+  }
+
   enum DrawModeRepeat what = PBMotionVectorsRepeat;
   const seq_parameter_set &sps = this->get_sps();
 
@@ -1012,7 +1085,13 @@ void de265_image::convert_info(){
           break;
         }
     }
+
+  crop1(mv_b, left, top, width_confwin, height_confwin);
+  crop1(mv_f, left, top, width_confwin, height_confwin);
+  crop1(quantPYs, left, top,  width_confwin, height_confwin);
 }
+#pragma optimize( "", on )
+
 
 void de265_image::PB_repeat(int x0,int y0, int w,int h, enum DrawModeRepeat what){
     const PBMotion& mvi = this->get_mv_info(x0,y0);

@@ -82,7 +82,7 @@ def yuvToArray(listTuple, notSample, w, h):
 ## 测试保存成numpy
 def saveCTBinfo(img, saveList, idx):
     if DEBUG:
-        print("w,h,cw,ch:", img.width, img.height, img.chroma_width, img.chroma_height)
+        print("w,h,cw,ch:", img.width_confwin, img.height_confwin, img.chroma_width_confwin, img.chroma_height_confwin)
 
 
     if "mv_f" in saveList:
@@ -100,7 +100,7 @@ def saveCTBinfo(img, saveList, idx):
         if DEBUG:
             print("residual[0]/[1]/[2]:", len(img.residuals[0]), len(img.residuals[1]), len(img.residuals[2]))
         residuals = yuvToArray(
-            img.residuals, img.width == img.chroma_width and img.width == img.chroma_height, img.width, img.height
+            img.residuals, img.width_confwin == img.chroma_width_confwin and img.width_confwin == img.chroma_height_confwin, img.width_confwin, img.height_confwin
         )
         if DEBUG:
             print(idx, "residuals", residuals.max(), residuals.min(), residuals.mean(), residuals.shape)
@@ -108,7 +108,7 @@ def saveCTBinfo(img, saveList, idx):
 
     if "prediction" in saveList:
         predictions = yuvToArray(
-            img.predictions, img.width == img.chroma_width and img.width == img.chroma_height, img.width, img.height
+            img.predictions, img.width_confwin == img.chroma_width_confwin and img.width_confwin == img.chroma_height_confwin, img.width_confwin, img.height_confwin
         )
         if DEBUG:
             print(idx, "predictions", predictions.max(), predictions.min(), predictions.mean(), predictions.shape)
@@ -135,7 +135,7 @@ def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h
     os.makedirs("npy", exist_ok=True)
     print("frames: ", len(imglist))
     for i, img in enumerate(imglist):
-        # saveCTBinfo(img, saveList, i)
+        saveCTBinfo(img, saveList, i)
         saveSliceType(img, slice_types)
     np.save("slice_types",np.array(slice_types))
 
@@ -152,5 +152,6 @@ if __name__ == "__main__":
     # testOneTimeBindImgName()
 
     # testSeveralTimeBindImgName()
-    testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/girlshy.h265")
+    # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/girlshy.h265")
+    testSaveOneTimeBindImgName(filename="/data/chenminghui/CompUpSamplingDataset/Vid4/BDx4_not_compressed/calendar_23.bin")
     pass

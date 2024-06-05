@@ -916,6 +916,12 @@ int main(int argc, char **argv)
         // decodedImg[framecnt]->convert_mv_info();
         // printf("framecnt:%d\n", framecnt);
         // printf("slice num:%d %d\n",img->slices.size(),img->slices[0]->slice_type);
+        de265_image *tmp = new de265_image;
+        // img->convert_mv_info(); //const pointer cann't call non-const function.
+        *tmp = *img;
+        // tmp->convert_mv_info(); //only mv
+        tmp->convert_info();  // mv and qp_y
+
         if (measure_quality)
         {
           measure(img);
