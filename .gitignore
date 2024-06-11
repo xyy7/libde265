@@ -3,6 +3,9 @@
 .dirstamp
 .gitignore
 *.o
+*.mp4
+!girlshy.h265
+*.bin
 *.lo
 *~
 Makefile
