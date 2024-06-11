@@ -1487,6 +1487,18 @@ PYBIND11_MODULE(dec265, m)
       .def_readwrite("x", &MotionVector::x)
       .def_readwrite("y", &MotionVector::y);
 
+      // de265_chroma_mono = 0,
+      // de265_chroma_420 = 1,
+      // de265_chroma_422 = 2,
+      // de265_chroma_444 = 3
+
+  py::enum_<enum de265_chroma>(m, "de265_chroma")
+    .value("de265_chroma_mono", de265_chroma::de265_chroma_mono)
+    .value("de265_chroma_420", de265_chroma::de265_chroma_420)
+    .value("de265_chroma_422", de265_chroma::de265_chroma_422)
+    .value("de265_chroma_444", de265_chroma::de265_chroma_444)
+    .export_values();
+
   py::bind_vector<std::vector<de265_image*>>(m, "VectorDe265ImagePointer");
 
   m.def("getCTBinfo", &getCTBinfo,py::return_value_policy::take_ownership);

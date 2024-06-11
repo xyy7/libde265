@@ -82,7 +82,7 @@ def yuvToArray(listTuple, notSample, w, h):
 ## 测试保存成numpy
 def saveCTBinfo(img, saveList, idx):
     if DEBUG:
-        print("w,h,cw,ch:", img.width_confwin, img.height_confwin, img.chroma_width_confwin, img.chroma_height_confwin)
+        print("w,h,cw,ch, chroma-format:", img.width_confwin, img.height_confwin, img.chroma_width_confwin, img.chroma_height_confwin,img.chroma_format)
 
 
     if "mv_f" in saveList:
@@ -153,5 +153,6 @@ if __name__ == "__main__":
 
     # testSeveralTimeBindImgName()
     # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/girlshy.h265")
-    testSaveOneTimeBindImgName(filename="/data/chenminghui/CompUpSamplingDataset/Vid4/BDx4_not_compressed/calendar_23.bin")
+    testSaveOneTimeBindImgName(filename="/data/chenminghui/CompUpSamplingDataset/Vimeo90k/sequences/00049/0311_23.bin")
+    # testSaveOneTimeBindImgName(filename="/data/chenminghui/CompUpSamplingDataset/Vid4/BDx4_not_compressed/calendar_23.bin")
     pass
