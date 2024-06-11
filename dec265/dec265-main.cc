@@ -919,8 +919,10 @@ int main(int argc, char **argv)
         de265_image *tmp = new de265_image;
         // img->convert_mv_info(); //const pointer cann't call non-const function.
         *tmp = *img;
+
         // tmp->convert_mv_info(); //only mv
         tmp->convert_info();  // mv and qp_y
+
 
         if (measure_quality)
         {

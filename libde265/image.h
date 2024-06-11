@@ -334,25 +334,41 @@ struct de265_image
   de265_image();
   ~de265_image();
   de265_image& operator=(const de265_image& other) {
+         
         if (this != &other) {
           image_allocation_functions = other.image_allocation_functions; //必须手动添加
           for (int i = 0; i < 3; ++i)
           {
+
             if (other.pixels[i] != nullptr) {
-                pixels[i] = new uint8_t[other.stride * other.height];
-                memcpy(pixels[i], other.pixels[i], other.stride * other.height);
+                int real_h = i==0 ? other.height : other.chroma_height;
+                int real_w = i==0 ? other.stride : other.chroma_stride;
+                
+                pixels[i] = new uint8_t[real_h * real_w];
+                memcpy(pixels[i], other.pixels[i], real_h * real_w);
             } else {
                 pixels[i] = nullptr;
             }
+            if (chroma_format == CHROMA_MONO){
+              break;
+            }
           }
-        for (int i = 0; i < 3; ++i) {
+          for (int i = 0; i < 3; ++i)
+          {
             if (other.pixels_confwin[i] != nullptr) {
-                pixels_confwin[i] = new uint8_t[other.width_confwin * other.height_confwin];
-                memcpy(pixels_confwin[i], other.pixels_confwin[i], other.width_confwin * other.height_confwin);
+                int real_h = i==0 ? other.height_confwin : other.chroma_height_confwin;
+                int real_w = i==0 ? other.width_confwin : other.chroma_width_confwin;
+
+                pixels_confwin[i] = new uint8_t[real_h * real_w];
+                memcpy(pixels_confwin[i], other.pixels_confwin[i], real_h * real_w);
             } else {
                 pixels_confwin[i] = nullptr;
             }
-        }
+            if (chroma_format == CHROMA_MONO){
+              break;
+            }
+          }
+
         slices.clear();
         for (slice_segment_header *slice : other.slices)
         {
