@@ -1,0 +1,1496 @@
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_units:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+logging: convert_info: real_w:123,real_h:235,real_cw:-5,real_ch:-5,pad_w:128,pad_h:240,stride:128,cstride:0,l:0,r:5,t:0,b:5
+crop1D: result:28905,WxH:28905
+crop1D: result:28905,WxH:28905
+cb_info: datasize:120, log2unitSize:4, width_in_unitframes:  115
+process:0 img...
+process:1 img...
+process:2 img...
+process:3 img...
+process:4 img...
+process:5 img...
+process:6 img...
+process:7 img...
+process:8 img...
+process:9 img...
+process:10 img...
+process:11 img...
+process:12 img...
+process:13 img...
+process:14 img...
+process:15 img...
+process:16 img...
+process:17 img...
+process:18 img...
+process:19 img...
+process:20 img...
+process:21 img...
+process:22 img...
+process:23 img...
+process:24 img...
+process:25 img...
+process:26 img...
+process:27 img...
+process:28 img...
+process:29 img...
+process:30 img...
+process:31 img...
+process:32 img...
+process:33 img...
+process:34 img...
+process:35 img...
+process:36 img...
+process:37 img...
+process:38 img...
+process:39 img...
+process:40 img...
+process:41 img...
+process:42 img...
+process:43 img...
+process:44 img...
+process:45 img...
+process:46 img...
+process:47 img...
+process:48 img...
+process:49 img...
+process:50 img...
+process:51 img...
+process:52 img...
+process:53 img...
+process:54 img...
+process:55 img...
+process:56 img...
+process:57 img...
+process:58 img...
+process:59 img...
+process:60 img...
+process:61 img...
+process:62 img...
+process:63 img...
+process:64 img...
+process:65 img...
+process:66 img...
+process:67 img...
+process:68 img...
+process:69 img...
+process:70 img...
+process:71 img...
+process:72 img...
+process:73 img...
+process:74 img...
+process:75 img...
+process:76 img...
+process:77 img...
+process:78 img...
+process:79 img...
+process:80 img...
+process:81 img...
+process:82 img...
+process:83 img...
+process:84 img...
+process:85 img...
+process:86 img...
+process:87 img...
+process:88 img...
+process:89 img...
+process:90 img...
+process:91 img...
+process:92 img...
+process:93 img...
+process:94 img...
+process:95 img...
+process:96 img...
+process:97 img...
+process:98 img...
+process:99 img...
+process:100 img...
+process:101 img...
+process:102 img...
+process:103 img...
+process:104 img...
+process:105 img...
+process:106 img...
+process:107 img...
+process:108 img...
+process:109 img...
+process:110 img...
+process:111 img...
+process:112 img...
+process:113 img...
+process:114 img...
+s:8, height_in_units:15
+
+===========print over!==========
+pb_info: datasize:1920, log2unitSize:2, width_in_units:32, height_in_units:60
+
+===========print over!==========
+crop2D:W=123,H=235
+crop2D:W=123,H=235
+crop2D:W=123,H=235

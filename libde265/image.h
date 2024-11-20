@@ -161,7 +161,7 @@ public:
 
   const DataUnit &get(int x, int y) const
   {
-    int unitX = x >> log2unitSize;
+    int unitX = x >> log2unitSize; // 2，右移2位，也就是缩小4倍
     int unitY = y >> log2unitSize;
 
     assert(unitX >= 0 && unitX < width_in_units);
@@ -200,18 +200,18 @@ public:
   void printMyself() const
   {
     printf("datasize:%d, log2unitSize:%d, width_in_units:%d, height_in_units:%d\n", data_size, log2unitSize, width_in_units, height_in_units);
-    int length = data_size > 20 ? 20 : data_size;
-    for (int i = 0; i < length; ++i)
-    {
-      if IS_UINT8 (data[i])
-      {
-        printf("%d, \n", data[i]);
-      }
-      else
-      {
-        std::cout << data[i] << std::endl;
-      }
-    }
+    // int length = data_size > 20 ? 20 : data_size;
+    // for (int i = 0; i < length; ++i)
+    // {
+    //   if IS_UINT8 (data[i])
+    //   {
+    //     printf("%d, \n", data[i]);
+    //   }
+    //   else
+    //   {
+    //     std::cout << data[i] << std::endl;
+    //   }
+    // }
     printf("\n===========print over!==========\n");
   }
 
@@ -293,6 +293,7 @@ struct CB_ref_info
   {
     return 0;
   }
+  // :3表示位域，并不是初始化的意思
   uint8_t log2CbSize : 3; /* [0;6] (1<<log2CbSize) = 64
                              This is only set in the top-left corner of the CB.
                              The other values should be zero.
@@ -1150,10 +1151,10 @@ public:
   void convert_mv_info();
 
   template< typename T>
-  void crop(std::vector<T> &vec, int left, int top, int pad_stride, int real_height, int real_width, int WinUnitX, int WinUnitY);
+  void crop1D(std::vector<T> &vec, int left, int top, int pad_stride, int real_height, int real_width);
 
   template <typename T>
-  void crop1(std::vector<std::vector<T>> &vec, int left, int top,int real_width, int real_height);
+  void crop2D(std::vector<std::vector<T>> &vec, int left, int top,int real_width, int real_height);
 
   void convert_info(); // 相比于convert_mv_info 应该更加广泛。
 

@@ -606,6 +606,7 @@ void scale_coefficients_internal(thread_context* tctx,
       assert(rdpcmMode==0);
 
       // printf("call transform_coefficients_explicit branch %d %d %d.\n",stride,nT, coeffStride);
+      //  -------------------- get (xT,yT,cIdx) block's prediction ---------------------
       int start_pos = xT+yT*stride;
       for (int y = 0; y < nT;y++)
       {
@@ -616,6 +617,8 @@ void scale_coefficients_internal(thread_context* tctx,
           pred[y * stride + x];
         }
       }
+      //  -------------------- get (xT,yT,cIdx) block's prediction ---------------------
+
       //pred is pred pixels.
       if (tctx->img->get_pps().range_extension.cross_component_prediction_enabled_flag)
       {
@@ -629,6 +632,7 @@ void scale_coefficients_internal(thread_context* tctx,
                                pred, stride, bit_depth);
       }
       //pred is decoded pixels.
+      //  -------------------- get (xT,yT,cIdx) block's residuals ---------------------
       for (int y = 0; y < nT;y++)
       {
         for (int x = 0; x < nT;x++)
@@ -639,6 +643,7 @@ void scale_coefficients_internal(thread_context* tctx,
           pred[cur_pos]-tctx->img->predictions[cIdx][start_pos+cur_pos];
         }
       }
+      //  -------------------- get (xT,yT,cIdx) block's residuals ---------------------
     }
   }
 

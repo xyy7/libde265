@@ -30,7 +30,7 @@ class slice_segment_header;
 class MotionVector
 {
 public:
-  int16_t x, y;
+  int16_t x=0, y=0;
   friend std::ostream &operator<<(std::ostream &os, const MotionVector &mv)
   {
     os << "x: " << mv.x << ", y: " << mv.y;
@@ -47,8 +47,12 @@ public:
     return 0;
   }
 
-  std::array<uint8_t, 2> predFlag; // which of the two vectors is actually used
-  std::array<int8_t, 2> refIdx;    // index into RefPicList
+  // uint8_t predFlag[2];  // which of the two vectors is actually used
+  // int8_t  refIdx[2];    // index into RefPicList
+  // MotionVector  mv[2];  // the absolute motion vectors
+
+  std::array<uint8_t, 2> predFlag={0,0}; // which of the two vectors is actually used
+  std::array<int8_t, 2> refIdx={0,0};    // index into RefPicList
   std::array<MotionVector, 2> mv;  // the absolute motion vectors
 
   bool operator==(const PBMotion &) const;

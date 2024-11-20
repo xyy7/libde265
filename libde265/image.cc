@@ -119,12 +119,13 @@ static int de265_image_get_buffer(de265_decoder_context *ctx,
 
   int luma_stride = (spec->width + spec->alignment - 1) / spec->alignment * spec->alignment;
   int chroma_stride = (rawChromaWidth + spec->alignment - 1) / spec->alignment * spec->alignment;
+  // printf("spec->alignment:%d\n",spec->alignment); // 16
 
   assert(img->BitDepth_Y >= 8 && img->BitDepth_Y <= 16);
   assert(img->BitDepth_C >= 8 && img->BitDepth_C <= 16);
 
-  int luma_bpl = luma_stride * ((img->BitDepth_Y + 7) / 8);
-  int chroma_bpl = chroma_stride * ((img->BitDepth_C + 7) / 8);
+  int luma_bpl = luma_stride * ((img->BitDepth_Y + 7) / 8); // 如果大于8bit，那么直接用2Byte来进行表示
+  int chroma_bpl = chroma_stride * ((img->BitDepth_C + 7) / 8);  //一般来说，没有使用到超过8bit的需求，因此luma_bpl=luma_stride
 
   int luma_height = spec->height;
   int chroma_height = rawChromaHeight;
@@ -135,11 +136,9 @@ static int de265_image_get_buffer(de265_decoder_context *ctx,
 
   uint8_t *p[3] = {0, 0, 0};
   //ALLOC_ALIGNED_16: memalign((alignment), (size))
-  p[0] = (uint8_t *)ALLOC_ALIGNED_16(luma_height * luma_bpl + MEMORY_PADDING);
+  p[0] = (uint8_t *)ALLOC_ALIGNED_16(luma_height * luma_bpl + MEMORY_PADDING); //没有使用memory padding
 
- 
-
-
+  // printf("residuals predictions Y:%d*%d,UV:%d*%d\n", luma_height, luma_bpl, chroma_height, chroma_bpl);
   residuals[0] = std::vector<int32_t>(luma_height * luma_bpl);
   predictions[0] = std::vector<uint8_t>(luma_height * luma_bpl);
 
@@ -187,7 +186,7 @@ static int de265_image_get_buffer(de265_decoder_context *ctx,
   img->set_image_plane(1, p[1], chroma_stride, NULL);
   img->set_image_plane(2, p[2], chroma_stride, NULL);
   
-  img->set_residuals(residuals);
+  img->set_residuals(residuals); // 效率确实低下，因为不是new出来的，实际上应该直接传递每个plane的size就行
   img->set_predictions(predictions);
 
   return 1;
@@ -404,8 +403,7 @@ de265_error de265_image::alloc_image(int w, int h, enum de265_chroma c,
   height_confwin = height - (top + bottom) * WinUnitY;
   chroma_width_confwin = chroma_width - left - right;
   chroma_height_confwin = chroma_height - top - bottom;
-  //printf("logging: alloc_image: wc:%d,hc:%d,cwc:%d,chc:%d,w:%d,h:%d,l:%d,r:%d,t:%d,b:%d",
-        //  width_confwin,height_confwin,chroma_width_confwin,chroma_height_confwin,width,height,left,right,top,bottom);
+  // printf("logging: alloc_image: real_w:%d,real_h:%d,real_cw:%d,real_ch:%d,pad_w:%d,pad_h:%d,stride:%d,cstride:%d,l:%d,r:%d,t:%d,b:%d\n", width_confwin,height_confwin,chroma_width_confwin,chroma_height_confwin,width,height, stride, chroma_stride,left, right,top,bottom);
 
   spec.crop_left = left * WinUnitX;
   spec.crop_right = right * WinUnitX;
@@ -949,27 +947,34 @@ void de265_image::convert_mv_info(){
     }
 }
 
-template< typename T>
-void de265_image::crop(std::vector<T> &vec, int left, int top, int pad_stride, int real_height, int real_width, int WinUnitX, int WinUnitY){
-  vec.erase(vec.begin(),vec.begin()+left * WinUnitX + top * WinUnitY * pad_stride);
-  vector<T> tmp = vec;
+template< typename T> //pixels是WxH处于同一个平面,每个通道一维数组
+void de265_image::crop1D(std::vector<T> &vec, int left, int top, int pad_stride, int real_height, int real_width){
+  // 去除左上角
+  vec.erase(vec.begin(),vec.begin()+left + top * pad_stride);
+  // 一行一行将vec复制到tmp
+  vector<T> tmp;
+  // tmp.reserve(real_width*real_height);
+  // printf("crop1D:init %d",tmp.size());
   for (int y = 0; y < real_height; y++)
   {
-    copy(vec.begin()+y * pad_stride, vec.begin()+y * pad_stride+real_width,tmp.begin()+y*real_width);
+    // copy(vec.begin()+y * pad_stride, vec.begin()+y * pad_stride+real_width, tmp.begin()+y*real_width); //reserve似乎复制不过来
+    tmp.insert(tmp.end(), vec.begin()+y * pad_stride, vec.begin()+y * pad_stride+real_width);
   }
-  tmp.erase(tmp.begin()+real_width*real_height,tmp.end());
+  printf("crop1D: result:%d,WxH:%d\n", tmp.size(), real_height * real_width);
+  // 恢复原来的大小
   vec.swap(tmp);
 }
 
-template< typename T>
-void de265_image::crop1(std::vector<std::vector<T>>& vec, int left, int top, int real_width, int real_height){
-  vec.erase(vec.begin(),vec.begin()+left);
-  vec.erase(vec.begin()+real_width,vec.end());
+template< typename T> //WxH,直接是二维数组
+void de265_image::crop2D(std::vector<std::vector<T>>& vec, int left, int top, int real_width, int real_height){
+  vec.erase(vec.begin(),vec.begin()+left); // 裁剪左边
+  vec.erase(vec.begin()+real_width,vec.end()); //裁剪右边
   for (int i = 0; i < vec.size();++i)
   {
-    vec[i].erase(vec[i].begin(), vec[i].begin() + top);
-    vec[i].erase(vec[i].begin()+real_height, vec[i].end());
+    vec[i].erase(vec[i].begin(), vec[i].begin() + top);  //裁剪上边
+    vec[i].erase(vec[i].begin()+real_height, vec[i].end()); //裁剪下边
   }
+  printf("crop2D:W=%lu,H=%lu\n", vec.size(), vec[0].size());
 }
 
 #pragma optimize( "", off )
@@ -1003,21 +1008,20 @@ void de265_image::convert_info(){
   int right = sps ? sps->conf_win_right_offset : 0;
   int top = sps ? sps->conf_win_top_offset : 0;
   int bottom = sps ? sps->conf_win_bottom_offset : 0;
-  // printf("logging: convert_info: wc:%d,hc:%d,cwc:%d,chc:%d,w:%d,h:%d,l:%d,r:%d,t:%d,b:%d, stride:%d\n",
-  //        width_confwin,height_confwin,chroma_width_confwin,chroma_height_confwin,width,height,left,right,top,bottom, stride);
+  printf("logging: convert_info: real_w:%d,real_h:%d,real_cw:%d,real_ch:%d,pad_w:%d,pad_h:%d,stride:%d,cstride:%d,l:%d,r:%d,t:%d,b:%d\n", width_confwin,height_confwin,chroma_width_confwin,chroma_height_confwin,width,height, stride, chroma_stride,left, right,top,bottom);
 
-
-  crop(residuals[0], left, top, stride, height_confwin, width_confwin, WinUnitX, WinUnitY);
+  // residuals/predictions是在pixels进行处理(pred和resi)转换的时候保存的,因此是跟pixels相同大小,需要处理成跟实际大小
+  crop1D(residuals[0], left*WinUnitX, top*WinUnitY, stride, height_confwin, width_confwin); //WinUnitX,WinUnitY是chroma下采样倍率
   if (chroma_format != de265_chroma_mono)
   {
-    crop(residuals[1], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin, 1, 1);
-    crop(residuals[2], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin, 1, 1);
+    crop1D(residuals[1], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin);
+    crop1D(residuals[2], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin);
   }
-  crop(predictions[0], left, top, stride, height_confwin, width_confwin, WinUnitX, WinUnitY);
+  crop1D(predictions[0], left*WinUnitX, top*WinUnitY, stride, height_confwin, width_confwin);
   if (chroma_format != de265_chroma_mono)
   {
-    crop(predictions[1], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin, 1, 1);
-    crop(predictions[2], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin, 1, 1);
+    crop1D(predictions[1], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin);
+    crop1D(predictions[2], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin);
   }
 
 
@@ -1025,13 +1029,23 @@ void de265_image::convert_info(){
   const seq_parameter_set &sps = this->get_sps();
 
   int minCbSize = sps.MinCbSizeY;  //8
-  const int W = this->get_width();
+  const int W = this->get_width();  //返回的只是pixels的pad完的宽和高
   const int H = this->get_height();
+  
+  // 将pb_info转换repeat成vector+图像的形式，以方便后续处理
+  // MetaDataArray<PBMotion> pb_info;        //运动向量/帧间预测模式需要保存
+  // std::vector<std::vector<std::array<int, 3>>> mv_f;
+  // std::vector<std::vector<std::array<int, 3>>> mv_b;
+  // printf("mv:%dx%d, %dx%d,minCbSize:%d\n", W, H,sps.PicWidthInMinCbsY,sps.PicHeightInMinCbsY,minCbSize); //mv:384x288, 24x18,minCbSize:16
   mv_b.resize(W, std::vector<std::array<int, 3>>(H));
   mv_f.resize(W, std::vector<std::array<int, 3>>(H));
   quantPYs.resize(W,std::vector<int>(H));
+  printf("cb_info: ");
+  cb_info.printMyself(); //cb_info: datasize:432, log2unitSize:4, width_in_units:24, height_in_units:18
+  printf("pb_info: ");
+  pb_info.printMyself(); //pb_info: datasize:6912, log2unitSize:2 width_in_units:96, height_in_units:72
 
-  for (int y0=0;y0<sps.PicHeightInMinCbsY;y0++)  //30*8 240 
+  for (int y0=0;y0<sps.PicHeightInMinCbsY;y0++)  //30*8 240  visualize.cc draw_tree_grid
     for (int x0=0;x0<sps.PicWidthInMinCbsY;x0++) //40*8 320
       {
         int log2CbSize = this->get_log2CbSize_cbUnits(x0,y0);
@@ -1043,7 +1057,7 @@ void de265_image::convert_info(){
         int yb = y0*minCbSize;
 
         int CbSize = 1<<log2CbSize;
-        PB_repeat(xb,yb,CbSize,CbSize, QuantP_YRepeat);
+        PB_repeat(xb, yb, CbSize, CbSize, QuantP_YRepeat); // 量化默认是2Nx2N visualize.cc
         enum PartMode partMode = this->get_PartMode(xb, yb);
         int HalfCbSize = (1<<(log2CbSize-1));
         switch (partMode) {
@@ -1085,32 +1099,32 @@ void de265_image::convert_info(){
           break;
         }
     }
-  crop1(mv_b, left, top, width_confwin, height_confwin);
-  crop1(mv_f, left, top, width_confwin, height_confwin);
-  crop1(quantPYs, left, top,  width_confwin, height_confwin);
+  crop2D(mv_b, left, top, width_confwin, height_confwin);
+  crop2D(mv_f, left, top, width_confwin, height_confwin);
+  crop2D(quantPYs, left, top,  width_confwin, height_confwin);
 }
-#pragma optimize( "", on )
+#pragma optimize("", on )
 
 
 void de265_image::PB_repeat(int x0,int y0, int w,int h, enum DrawModeRepeat what){
-    const PBMotion& mvi = this->get_mv_info(x0,y0);
-    // printf("PB_repeat...%d,%d,%d,%d\n",x0,y0,w,h);
-    // printf("mvb.size():%d. mvb[0].size():%d ,%d,%d\n", mv_b.size(),mv_b[0].size(),x0+w,y0+h);
-
     if(what == PBMotionVectorsRepeat){
-      if (mvi.predFlag[0])
+      const PBMotion& mvi = this->get_mv_info(x0,y0);
+      // printf("PB_repeat...%d,%d,%d,%d\n",x0,y0,w,h);
+      // printf("mvb.size():%d. mvb[0].size():%d ,%d,%d\n", mv_b.size(),mv_b[0].size(),x0+w,y0+h);
+      // std::cout << mvi<<endl;
+      if (mvi.predFlag[0]==1)  // 避免有的时候解码出乱码，理论上不应该解码出乱码
       {
         for (int x = x0; x < x0 + w;++x){
           for (int y = y0; y < y0 + h;++y){
-            std::array<int,3> pixel_mv = { mvi.mv[0].x, mvi.mv[0].y,mvi.refIdx[0]};
+            std::array<int,3> pixel_mv = { static_cast<int>(mvi.mv[0].x), static_cast<int>(mvi.mv[0].y), static_cast<int>(mvi.refIdx[0])};
             mv_b[x][y] = pixel_mv;
           }
         }
       }
-      if (mvi.predFlag[1]) {
+      if (mvi.predFlag[1]==1) {
         for (int x = x0; x < x0 + w;++x){
           for (int y = y0; y < y0 + h;++y){
-            std::array<int,3> pixel_mv = { mvi.mv[1].x, mvi.mv[1].y,mvi.refIdx[1]};
+            std::array<int,3> pixel_mv = { static_cast<int>(mvi.mv[1].x), static_cast<int>(mvi.mv[1].y),static_cast<int>(mvi.refIdx[1])};
             mv_f[x][y] = pixel_mv;
           }
         }

@@ -1,4 +1,5 @@
 import os
+import os.path as osp
 
 import numpy as np
 
@@ -86,12 +87,13 @@ def saveCTBinfo(img, saveList, idx):
 
 
     if "mv_f" in saveList:
-        mv_f = np.array(img.mv_f)
+        mv_f = np.array(img.mv_f) # 384*288*3
         if DEBUG:
             print(idx, "mv_f", mv_f[:, :, 2].max(), mv_f[:, :, 2].min(), mv_f.shape)
         np.save(f"npy/{idx}_mv_f.npy", mv_f)
     if "mv_b" in saveList:
         mv_b = np.array(img.mv_b)
+        # print(idx, "mv_b", mv_b[:, :, 2].max(), mv_b[:, :, 2].min(), mv_b.shape)
         if DEBUG:
             print(idx, "mv_b", mv_b[:, :, 2].max(), mv_b[:, :, 2].min(), mv_b.shape)
         np.save(f"npy/{idx}_mv_b.npy", mv_b)
@@ -135,6 +137,7 @@ def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h
     os.makedirs("npy", exist_ok=True)
     print("frames: ", len(imglist))
     for i, img in enumerate(imglist):
+        print(f"process:{i} img...")
         saveCTBinfo(img, saveList, i)
         saveSliceType(img, slice_types)
     np.save("slice_types",np.array(slice_types))
@@ -142,7 +145,7 @@ def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h
 
 
 if __name__ == "__main__":
-    DEBUG = True
+    DEBUG = False
     # testOneTime()
     # testOneTimeSTLbind()
 
@@ -152,7 +155,10 @@ if __name__ == "__main__":
     # testOneTimeBindImgName()
 
     # testSeveralTimeBindImgName()
-    testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/girlshy.h265")
+    # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/girlshy.h265")
+    testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/blackcar-123x235.bin")
+    # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/blackcar-bf0.bin")
+    # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/black_gray_ldp.bin")
     # testSaveOneTimeBindImgName(filename="/data/chenminghui/CompUpSamplingDataset/Vimeo90k/sequences/00049/0311_23.bin")
     # testSaveOneTimeBindImgName(filename="/data/chenminghui/CompUpSamplingDataset/Vid4/BDx4_not_compressed/calendar_23.bin")
     pass

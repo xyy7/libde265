@@ -380,8 +380,13 @@ void generate_inter_prediction_samples(base_context *ctx,
         ctx->add_warning(DE265_WARNING_NONEXISTING_REFERENCE_PICTURE_ACCESSED, false);
         return;
       }
-
       const de265_image *refPic = ctx->get_image(shdr->RefPicList[l][vi->refIdx[l]]);
+      // printf("1st reflist%d: ",l);
+      // for (int ref : shdr->RefPicList[l])
+      // {
+      //   printf("%d ", ref);
+      // }
+      // printf("\nrefIdx: %d curId:%d, refid:%d\n", vi->refIdx[l], img->PicOrderCntVal,refPic->PicOrderCntVal);
 
       logtrace(LogMotion, "refIdx: %d -> dpb[%d]\n", vi->refIdx[l], shdr->RefPicList[l][vi->refIdx[l]]);
 
@@ -1809,6 +1814,13 @@ void derive_spatial_luma_vector_prediction(base_context *ctx,
     return;
   }
   const int referenced_POC = tmpimg->PicOrderCntVal;
+  // printf("6th reflist%d: ",X);
+  // for (int ref : shdr->RefPicList[X])
+  // {
+  //   printf("%d ", ref);
+  // }
+  // printf("\nrefIdx: %d curId:%d, refid:%d\n", refIdxLX, img->PicOrderCntVal, referenced_POC);
+
 
   for (int k = 0; k <= 1; k++)
   {
@@ -1923,6 +1935,7 @@ void derive_spatial_luma_vector_prediction(base_context *ctx,
 
       const de265_image *refPicA = ctx->get_image(shdr->RefPicList[refPicList][refIdxA]);
       const de265_image *refPicX = ctx->get_image(shdr->RefPicList[X][refIdxLX]);
+      
 
       // int picStateA = shdr->RefPicList_PicState[refPicList][refIdxA ];
       // int picStateX = shdr->RefPicList_PicState[X         ][refIdxLX];
