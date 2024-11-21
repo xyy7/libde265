@@ -368,6 +368,7 @@ void generate_inter_prediction_samples(base_context *ctx,
     }
   }
 
+  // motion compensation
   for (int l = 0; l < 2; l++)
   {
     if (predFlag[l])
@@ -422,7 +423,7 @@ void generate_inter_prediction_samples(base_context *ctx,
         logtrace(LogMotion, "do MC: L%d,MV=%d;%d RefPOC=%d\n",
                  l, vi->mv[l].x, vi->mv[l].y, refPic->PicOrderCntVal);
 
-        // TODO: must predSamples stride really be nCS or can it be somthing smaller like nPbW?
+        // TODO: must predSamples stride really be nCS or can it be soomthing smaller like nPbW?
 
         if (img->high_bit_depth(0))
         {
@@ -500,12 +501,14 @@ void generate_inter_prediction_samples(base_context *ctx,
          Noffset_shift1_C);
   */
 
+  // 如果不加权预测,那么predSample就是pixels;如果加权预测,那么predSample需要进行加权,才能转换成pixels
   logtrace(LogMotion, "predFlags (modified): %d %d\n", predFlag[0], predFlag[1]);
 
   if (shdr->slice_type == SLICE_TYPE_P)
   {
     if (pps->weighted_pred_flag == 0)
     {
+      // unweighted prediction
       if (predFlag[0] == 1 && predFlag[1] == 0)
       {
         ctx->acceleration.put_unweighted_pred(pixels[0], stride[0],
@@ -719,6 +722,9 @@ void generate_inter_prediction_samples(base_context *ctx,
       img->integrity = INTEGRITY_DECODING_ERRORS;
     }
   }
+
+  
+  
 
 #if defined(DE265_LOG_TRACE) && 0
   logtrace(LogTransform, "MC pixels (luma), position %d %d:\n", xP, yP);

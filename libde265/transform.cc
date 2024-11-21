@@ -365,7 +365,9 @@ void scale_coefficients_internal(thread_context* tctx,
                                  int nT, int cIdx,
                                  bool transform_skip_flag, bool intra, int rdpcmMode)
 {
+  
   // printf("transform.cc scale_coefficients_internal\n");
+  
   const seq_parameter_set& sps = tctx->img->get_sps();
   const pic_parameter_set& pps = tctx->img->get_pps();
 
@@ -391,7 +393,7 @@ void scale_coefficients_internal(thread_context* tctx,
   pixel_t* residuals;
 
   int      stride;
-  pred = tctx->img->get_image_plane_at_pos_NEW<pixel_t>(cIdx, xT,yT);
+  pred = tctx->img->get_image_plane_at_pos_NEW<pixel_t>(cIdx, xT,yT); //获取TU的首地址
   // real_preds = tctx->img->get_predictions_plane_at_pos_NEW<pixel_t>(cIdx, xT,yT);
   // residuals = tctx->img->get_residuals_plane_at_pos_NEW<pixel_t>(cIdx, xT,yT);
   stride = tctx->img->get_image_stride(cIdx);
@@ -441,8 +443,8 @@ void scale_coefficients_internal(thread_context* tctx,
         cross_comp_pred(tctx, residual, nT);
       }
     }
-
-    tctx->decctx->acceleration.add_residual(pred,stride, residual,nT, bit_depth);
+    printf("xT,yT:(%d, %d)cu_transquant_bypass_flag:true\n",xT,yT);
+    tctx->decctx->acceleration.add_residual(pred, stride, residual, nT, bit_depth);
 
     if (rotateCoeffs) {
       memset(coeff, 0, nT*nT*sizeof(int16_t)); // delete all, because we moved the coeffs around
@@ -450,7 +452,7 @@ void scale_coefficients_internal(thread_context* tctx,
   }
   else {
     // (8.6.3)
-
+    
     int bdShift = (cIdx==0 ? sps.BitDepth_Y : sps.BitDepth_C) + Log2(nT) - 5;
 
     logtrace(LogTransform,"bdShift=%d\n",bdShift);
@@ -586,6 +588,7 @@ void scale_coefficients_internal(thread_context* tctx,
       //     residuals[y * stride + x] = residual[y * nT + x];
       //   }
       // }
+      // printf("xT,yT:(%d, %d)transform_skip_flag:true\n",xT,yT);
       tctx->decctx->acceleration.add_residual(pred, stride, residual, nT, bit_depth);
 
       if (rotateCoeffs) {
@@ -604,19 +607,22 @@ void scale_coefficients_internal(thread_context* tctx,
       }
 
       assert(rdpcmMode==0);
+      
+
 
       // printf("call transform_coefficients_explicit branch %d %d %d.\n",stride,nT, coeffStride);
       //  -------------------- get (xT,yT,cIdx) block's prediction ---------------------
-      int start_pos = xT+yT*stride;
-      for (int y = 0; y < nT;y++)
-      {
-        for (int x = 0; x < nT;x++)
-        {
-          // real_preds[y * stride + x] = pred[y * stride + x];
-          tctx->img->predictions[cIdx][start_pos+y * stride + x]=
-          pred[y * stride + x];
-        }
-      }
+      // printf("xT,yT:(%d, %d)transform_skip_flag:false\n",xT,yT);
+      // int start_pos = xT+yT*stride; // generated outside scale_coeff
+      // for (int y = 0; y < nT; y++)
+      // {
+      //   for (int x = 0; x < nT;x++)
+      //   {
+      //     // real_preds[y * stride + x] = pred[y * stride + x];
+      //     tctx->img->predictions[cIdx][start_pos+y * stride + x]=
+      //     pred[y * stride + x];
+      //   }
+      // }
       //  -------------------- get (xT,yT,cIdx) block's prediction ---------------------
 
       //pred is pred pixels.
@@ -628,22 +634,23 @@ void scale_coefficients_internal(thread_context* tctx,
                                         pred, stride, bit_depth, cIdx);
       }
       else {
+        // 预测值+残差
         transform_coefficients(&tctx->decctx->acceleration, coeff, coeffStride, nT, trType,
                                pred, stride, bit_depth);
       }
-      //pred is decoded pixels.
-      //  -------------------- get (xT,yT,cIdx) block's residuals ---------------------
-      for (int y = 0; y < nT;y++)
-      {
-        for (int x = 0; x < nT;x++)
-        {
-          // residuals[y * stride + x] = pred[y * stride + x]-real_preds[y * stride + x];
-          int cur_pos = y * stride + x;
-          tctx->img->residuals[cIdx][start_pos+cur_pos]=
-          pred[cur_pos]-tctx->img->predictions[cIdx][start_pos+cur_pos];
-        }
-      }
-      //  -------------------- get (xT,yT,cIdx) block's residuals ---------------------
+      // pred is decoded pixels.  generated at last.
+      // //  -------------------- get (xT,yT,cIdx) block's residuals ---------------------
+      // for (int y = 0; y < nT;y++)
+      // {
+      //   for (int x = 0; x < nT;x++)
+      //   {
+      //     // residuals[y * stride + x] = pred[y * stride + x]-real_preds[y * stride + x];
+      //     int cur_pos = y * stride + x;
+      //     tctx->img->residuals[cIdx][start_pos+cur_pos]=
+      //     pred[cur_pos]-tctx->img->predictions[cIdx][start_pos+cur_pos];
+      //   }
+      // }
+      // //  -------------------- get (xT,yT,cIdx) block's residuals ---------------------
     }
   }
 

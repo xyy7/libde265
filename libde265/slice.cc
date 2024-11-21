@@ -33,6 +33,7 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
+#include <exception>
 
 
 #define LOCK de265_mutex_lock(&ctx->thread_pool.mutex)
@@ -3437,7 +3438,8 @@ static void decode_TU(thread_context* tctx,
                       int xCUBase,int yCUBase,
                       int nT, int cIdx, enum PredMode cuPredMode, bool cbf)
 {
-  de265_image* img = tctx->img;
+  // printf("decode_TU,pred size:%d\n",tctx->img->predictions[0].size());
+  de265_image *img = tctx->img;
   const seq_parameter_set& sps = img->get_sps();
 
   int residualDpcm = 0;
@@ -3478,9 +3480,25 @@ static void decode_TU(thread_context* tctx,
       }
     }
 
+  //  -------------------- get (xT,yT,cIdx) block's prediction ---------------------
+  // printf("xT,yT:(%d, %d)transform_skip_flag:false\n",xT,yT);
+    int stride = tctx->img->get_image_stride(cIdx);
+    int start_pos = x0 + y0 * stride; // generated outside scale_coeff
+    for (int y = 0; y < nT; y++)
+    {
+      for (int x = 0; x < nT; x++)
+      {
+        // real_preds[y * stride + x] = pred[y * stride + x];
+        tctx->img->predictions[cIdx][start_pos + y * stride + x] =
+            tctx->img->pixels[cIdx][start_pos + y * stride + x];
+      }
+  }
+  //  -------------------- get (xT,yT,cIdx) block's prediction ---------------------
+
   if (cbf) {
-    scale_coefficients(tctx, x0,y0, xCUBase,yCUBase, nT, cIdx,
-                       tctx->transform_skip_flag[cIdx], cuPredMode==MODE_INTRA, residualDpcm);
+    // printf("decoded_TU: cbf=false\n");
+    scale_coefficients(tctx, x0, y0, xCUBase, yCUBase, nT, cIdx,
+                       tctx->transform_skip_flag[cIdx], cuPredMode == MODE_INTRA, residualDpcm);
   }
   /*
   else if (!cbf && cIdx==0) {
@@ -3489,7 +3507,7 @@ static void decode_TU(thread_context* tctx,
   */
   else if (!cbf && cIdx!=0 && tctx->ResScaleVal) {
     // --- cross-component-prediction when CBF==0 ---
-
+    // printf("decoded_TU: cbf=true\n");
     tctx->nCoeff[cIdx] = 0;
     residualDpcm=0;
 
@@ -3566,6 +3584,7 @@ int read_transform_unit(thread_context* tctx,
                         int blkIdx,
                         int cbf_luma, int cbf_cb, int cbf_cr)
 {
+  //  printf("read_transform_unit,pred size:%d\n",tctx->img->predictions[0].size());
   logtrace(LogSlice,"- read_transform_unit x0:%d y0:%d xBase:%d yBase:%d nT:%d cbf:%d:%d:%d\n",
            x0,y0,xBase,yBase, 1<<log2TrafoSize, cbf_luma, cbf_cb, cbf_cr);
 
@@ -3660,6 +3679,7 @@ int read_transform_unit(thread_context* tctx,
   int yL = y0 - yCUBase;
   int nT = 1<<log2TrafoSize;
   int nTC = 1<<log2TrafoSizeC;
+  
 
   const int SubWidthC  = sps.SubWidthC;
   const int SubHeightC = sps.SubHeightC;
@@ -3841,10 +3861,11 @@ void read_transform_tree(thread_context* tctx,
                          enum PredMode cuPredMode,
                          uint8_t parent_cbf_cb,uint8_t parent_cbf_cr)
 {
+  // printf("read_transform_tree,pred size:%d\n",tctx->img->predictions[0].size());
   logtrace(LogSlice,"- read_transform_tree (interleaved) x0:%d y0:%d xBase:%d yBase:%d "
            "log2TrafoSize:%d trafoDepth:%d MaxTrafoDepth:%d parent-cbf-cb:%d parent-cbf-cr:%d\n",
            x0,y0,xBase,yBase,log2TrafoSize,trafoDepth,MaxTrafoDepth,parent_cbf_cb,parent_cbf_cr);
-
+   
   de265_image* img = tctx->img;
   const seq_parameter_set& sps = img->get_sps();
 
@@ -4308,8 +4329,11 @@ void read_coding_unit(thread_context* tctx,
   int IntraSplitFlag = 0;
 
   enum PredMode cuPredMode;
+  
 
   if (cu_skip_flag) {
+    tctx->img->decoded_residuals_num += (1 << log2CbSize)*(1<<log2CbSize);
+    printf("has residuals predictions cu_skip: %d\n", tctx->img->decoded_residuals_num);
     read_prediction_unit_SKIP(tctx,x0,y0,nCbS,nCbS);
 
     img->set_PartMode(x0,y0, PART_2Nx2N); // need this for deblocking filter
@@ -4323,15 +4347,47 @@ void read_coding_unit(thread_context* tctx,
 
     int nCS_L = 1<<log2CbSize;
     decode_prediction_unit(tctx->decctx,tctx->shdr,tctx->img,tctx->motion,
-                           x0,y0, 0,0, nCS_L, nCS_L,nCS_L, 0);
+                           x0,y0, 0,0, nCS_L, nCS_L,nCS_L, 0);  // cu_skip进行帧间预测 
+    // cu_skip的帧间预测结果
+    //  -------------------- get (xP,yP,cIdx) block's prediction ---------------------
+    int xP = x0;
+    int yP = y0;
+    const pic_parameter_set *pps = tctx->shdr->pps.get();
+    const seq_parameter_set *sps = pps->sps.get();
+    const int SubWidthC = sps->SubWidthC;
+    const int SubHeightC = sps->SubHeightC;
+    for (int cIdx = 0; cIdx < 3; cIdx++)
+    {
+      for (int y = 0; y < nCS_L; y++)
+      {
+        for (int x = 0; x < nCS_L; x++)
+        {
+          int stride = tctx->img->get_image_stride(cIdx);
+          int start_pos = xP+yP*stride;
+            tctx->img->predictions[cIdx].at(start_pos + y * stride + x) =
+              tctx->img->pixels[cIdx][start_pos + y * stride + x];
+        }
+      }
+      if (img->get_chroma_format() == de265_chroma_mono){
+        break;
+      }
+      if(cIdx==0){
+          xP /= SubWidthC;
+          nCS_L /= SubWidthC;
+
+          yP /= SubHeightC;
+          nCS_L /= SubHeightC;
+      }
+    }
+    //  -------------------- get (xT,yT,cIdx) block's prediction ---------------------
   }
   else /* not skipped */ {
     if (shdr->slice_type != SLICE_TYPE_I) {
       int pred_mode_flag = decode_pred_mode_flag(tctx);
-      cuPredMode = pred_mode_flag ? MODE_INTRA : MODE_INTER;
+      cuPredMode = pred_mode_flag ? MODE_INTRA : MODE_INTER; //如果不是I帧,那么可能是使用帧内或者帧间模式
     }
     else {
-      cuPredMode = MODE_INTRA;
+      cuPredMode = MODE_INTRA;  // 如果是I帧,那么肯定使用帧内模式
     }
 
     img->set_pred_mode(x0,y0,log2CbSize, cuPredMode);
@@ -4360,6 +4416,9 @@ void read_coding_unit(thread_context* tctx,
     bool pcm_flag = false;
 
     if (cuPredMode == MODE_INTRA) {
+      tctx->img->decoded_residuals_num += (1 << log2CbSize)*(1<<log2CbSize);
+      printf("has residuals predictions intra: %d\n", tctx->img->decoded_residuals_num);
+
       if (PartMode == PART_2Nx2N && sps.pcm_enabled_flag &&
           log2CbSize >= sps.Log2MinIpcmCbSizeY &&
           log2CbSize <= sps.Log2MaxIpcmCbSizeY) {
@@ -4368,6 +4427,8 @@ void read_coding_unit(thread_context* tctx,
 
       if (pcm_flag) {
         img->set_pcm_flag(x0,y0,log2CbSize);
+        tctx->img->decoded_residuals_num += (1 << log2CbSize)*(1<<log2CbSize);
+        printf("has residuals predictions: %d\n", tctx->img->decoded_residuals_num);
 
         read_pcm_samples(tctx, x0,y0, log2CbSize);
       }
@@ -4502,6 +4563,8 @@ void read_coding_unit(thread_context* tctx,
       }
     }
     else { // INTER
+      tctx->img->decoded_residuals_num += (1 << log2CbSize)*(1<<log2CbSize);
+      printf("has residuals predictions inter: %d\n", tctx->img->decoded_residuals_num);
       int nCS = 1<<log2CbSize;
 
       if (PartMode == PART_2Nx2N) {
@@ -4542,17 +4605,47 @@ void read_coding_unit(thread_context* tctx,
       }
     } // INTER
 
+    // printf("read_coding_unit,pred size:%d\n",tctx->img->predictions[0].size());
+    int xP = x0;
+    int yP = y0;
+    int nCS_L = 1 << log2CbSize;
+    const pic_parameter_set *pps1 = tctx->shdr->pps.get();
+    const seq_parameter_set *sps1 = pps1->sps.get();
+    const int SubWidthC = sps1->SubWidthC;
+    const int SubHeightC = sps1->SubHeightC;
+    for (int cIdx = 0; cIdx < 3; cIdx++)
+    {
+      for (int y = 0; y < nCS_L; y++)
+      {
+        for (int x = 0; x < nCS_L; x++)
+        {
+          int stride = tctx->img->get_image_stride(cIdx);
+          int start_pos = xP+yP*stride;
+          tctx->img->predictions[cIdx].at(start_pos + y * stride + x) =
+              tctx->img->pixels[cIdx][start_pos + y * stride + x];
+        }
+      }
+      if (img->get_chroma_format() == de265_chroma_mono){
+        break;
+      }
+      if(cIdx==0){
+          xP /= SubWidthC;
+          nCS_L /= SubWidthC;
+
+          yP /= SubHeightC;
+          nCS_L /= SubHeightC;
+      }
+    }
 
     // decode residual
-
     if (!pcm_flag) { // !pcm
+      
       bool rqt_root_cbf;
 
       uint8_t merge_flag = tctx->motion.merge_flag; // !!get_merge_flag(ctx,x0,y0);
 
       if (cuPredMode != MODE_INTRA &&
           !(PartMode == PART_2Nx2N && merge_flag)) {
-
         rqt_root_cbf = !!decode_rqt_root_cbf(tctx);
       }
       else {
@@ -4566,7 +4659,7 @@ void read_coding_unit(thread_context* tctx,
 
       //set_rqt_root_cbf(ctx,x0,y0, log2CbSize, rqt_root_cbf);
 
-      if (rqt_root_cbf) {
+      if (rqt_root_cbf) { //若存在明显的残差系数则*CBF*为1
         int MaxTrafoDepth;
 
         if (cuPredMode==MODE_INTRA) {
@@ -4582,7 +4675,7 @@ void read_coding_unit(thread_context* tctx,
         if (sps.ChromaArrayType == CHROMA_MONO) {
           initial_chroma_cbf = 0;
         }
-
+        
         read_transform_tree(tctx, x0,y0, x0,y0, x0,y0, log2CbSize, 0,0,
                             MaxTrafoDepth, IntraSplitFlag, cuPredMode,
                             initial_chroma_cbf, initial_chroma_cbf);

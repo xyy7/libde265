@@ -76,9 +76,8 @@ def yuvRepeat(listTuple, chroma_format):
 
 def yuvToArray(listTuple, notSample, w, h):
     if notSample:
-        return np.array(listTuple).reshape([w, h, -1])
-    return np.array(listTuple[0]).reshape([w, h])
-
+        return np.array(listTuple).reshape([h, w, -1])
+    return np.array(listTuple[0]).reshape([h, w])  # TODO 处理yuv420
 
 ## 测试保存成numpy
 def saveCTBinfo(img, saveList, idx):
@@ -92,10 +91,9 @@ def saveCTBinfo(img, saveList, idx):
             print(idx, "mv_f", mv_f[:, :, 2].max(), mv_f[:, :, 2].min(), mv_f.shape)
         np.save(f"npy/{idx}_mv_f.npy", mv_f)
     if "mv_b" in saveList:
-        mv_b = np.array(img.mv_b)
-        # print(idx, "mv_b", mv_b[:, :, 2].max(), mv_b[:, :, 2].min(), mv_b.shape)
+        mv_b = np.array(img.mv_b)[:,:,:2].clip(-128,127).astype('int8') # 因为大部分都是前一帧,所以默认是前一帧
         if DEBUG:
-            print(idx, "mv_b", mv_b[:, :, 2].max(), mv_b[:, :, 2].min(), mv_b.shape)
+            print(idx, "mv_b", mv_b.max(), mv_b.min(), mv_b.shape)
         np.save(f"npy/{idx}_mv_b.npy", mv_b)
 
     if "residual" in saveList:
@@ -104,6 +102,7 @@ def saveCTBinfo(img, saveList, idx):
         residuals = yuvToArray(
             img.residuals, img.width_confwin == img.chroma_width_confwin and img.width_confwin == img.chroma_height_confwin, img.width_confwin, img.height_confwin
         )
+        residuals = residuals.clip(-128,127).astype('int8')
         if DEBUG:
             print(idx, "residuals", residuals.max(), residuals.min(), residuals.mean(), residuals.shape)
         np.save(f"npy/{idx}_residuals.npy", residuals)
@@ -112,18 +111,25 @@ def saveCTBinfo(img, saveList, idx):
         predictions = yuvToArray(
             img.predictions, img.width_confwin == img.chroma_width_confwin and img.width_confwin == img.chroma_height_confwin, img.width_confwin, img.height_confwin
         )
+        predictions = predictions.clip(0,255).astype('uint8')
         if DEBUG:
             print(idx, "predictions", predictions.max(), predictions.min(), predictions.mean(), predictions.shape)
         np.save(f"npy/{idx}_predictions.npy", predictions)
+    
+    if "decoded" in saveList:
+        np.save(f"npy/{idx}_decoded.npy", (predictions.astype('int32')+residuals.astype('int32')).clip(0,255).astype('uint8'))
+        
+
+
 
     if "qp_y" in saveList:
-        quantPYs = np.array(img.quantPYs)
+        quantPYs = np.array(img.quantPYs).clip(-128,127).astype('int8')
         if DEBUG:
             print(idx, "quantPYs", quantPYs.max(), quantPYs.min(), quantPYs.mean(), quantPYs.shape)
         np.save(f"npy/{idx}quantPYs.npy", quantPYs)
 
-    if idx == 1 and DEBUG:
-        exit()
+    # if idx == 1 and DEBUG:
+    #     exit()
 
 def saveSliceType(img, slice_types):
     slice_types.append(img.slice_type)
@@ -133,7 +139,7 @@ def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h
     imglist = dec265.VectorDe265ImagePointer()
     slice_types = []
     res = dec265.getCTBinfo(imglist, filename)
-    saveList = ["mv_f", "mv_b", "residual", "prediction", "qp_y"]
+    saveList = ["mv_b", "residual", "prediction", "qp_y","decoded"]
     os.makedirs("npy", exist_ok=True)
     print("frames: ", len(imglist))
     for i, img in enumerate(imglist):
@@ -156,9 +162,9 @@ if __name__ == "__main__":
 
     # testSeveralTimeBindImgName()
     # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/girlshy.h265")
-    testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/blackcar-123x235.bin")
-    # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/blackcar-bf0.bin")
-    # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/black_gray_ldp.bin")
+    # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/blackcar-123x235.bin")
+    testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/black_gray_ldp.bin")
+    # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/traffic.bin")
     # testSaveOneTimeBindImgName(filename="/data/chenminghui/CompUpSamplingDataset/Vimeo90k/sequences/00049/0311_23.bin")
     # testSaveOneTimeBindImgName(filename="/data/chenminghui/CompUpSamplingDataset/Vid4/BDx4_not_compressed/calendar_23.bin")
     pass

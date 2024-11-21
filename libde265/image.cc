@@ -138,7 +138,7 @@ static int de265_image_get_buffer(de265_decoder_context *ctx,
   //ALLOC_ALIGNED_16: memalign((alignment), (size))
   p[0] = (uint8_t *)ALLOC_ALIGNED_16(luma_height * luma_bpl + MEMORY_PADDING); //没有使用memory padding
 
-  // printf("residuals predictions Y:%d*%d,UV:%d*%d\n", luma_height, luma_bpl, chroma_height, chroma_bpl);
+  printf("residuals predictions Y:%d*%d,UV:%d*%d, lumastride:%d,luma_bitDepth:%d\n", luma_height, luma_bpl, chroma_height, chroma_bpl,luma_stride,img->BitDepth_Y);
   residuals[0] = std::vector<int32_t>(luma_height * luma_bpl);
   predictions[0] = std::vector<uint8_t>(luma_height * luma_bpl);
 

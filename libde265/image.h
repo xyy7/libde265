@@ -550,8 +550,10 @@ struct de265_image
 
   uint8_t *pixels[3];
   std::array<std::vector<int32_t>,3> residuals;
-  std::array<std::vector<uint8_t>,3> predictions;
-  uint8_t bpp_shift[3]; // 0 for 8 bit, 1 for 16 bit
+  int decoded_residuals_num = 0;
+  std::array<std::vector<uint8_t>, 3> predictions;
+  int decoded_predictions_num = 0;
+  uint8_t bpp_shift[3]; // 0 for 8 bit, 1 for 16 bit  //一般都是使用0
 
   enum de265_chroma chroma_format;
 
