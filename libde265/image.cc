@@ -1008,10 +1008,26 @@ void de265_image::convert_info(){
   int right = sps ? sps->conf_win_right_offset : 0;
   int top = sps ? sps->conf_win_top_offset : 0;
   int bottom = sps ? sps->conf_win_bottom_offset : 0;
-  printf("logging: convert_info: real_w:%d,real_h:%d,real_cw:%d,real_ch:%d,pad_w:%d,pad_h:%d,stride:%d,cstride:%d,l:%d,r:%d,t:%d,b:%d\n", width_confwin,height_confwin,chroma_width_confwin,chroma_height_confwin,width,height, stride, chroma_stride,left, right,top,bottom);
+  // printf("logging: convert_info: real_w:%d,real_h:%d,real_cw:%d,real_ch:%d,pad_w:%d,pad_h:%d,stride:%d,cstride:%d,l:%d,r:%d,t:%d,b:%d\n", width_confwin,height_confwin,chroma_width_confwin,chroma_height_confwin,width,height, stride, chroma_stride,left, right,top,bottom);
+
+  for (int cIdx = 0; cIdx < 3; cIdx++)
+  {
+    for (int y = 0; y < get_height(cIdx); y++)
+    {
+      for (int x = 0; x < get_width(cIdx); x++)
+      {
+        int stride = get_image_stride(cIdx);
+        int pos = y * stride + x;
+        residuals[cIdx][pos] = pixels[cIdx][pos]-predictions[cIdx][pos];
+      }
+    }
+    if (get_chroma_format() == de265_chroma_mono){
+      break;
+    }
+  }
 
   // residuals/predictions是在pixels进行处理(pred和resi)转换的时候保存的,因此是跟pixels相同大小,需要处理成跟实际大小
-  crop1D(residuals[0], left*WinUnitX, top*WinUnitY, stride, height_confwin, width_confwin); //WinUnitX,WinUnitY是chroma下采样倍率
+  crop1D(residuals[0], left * WinUnitX, top * WinUnitY, stride, height_confwin, width_confwin); // WinUnitX,WinUnitY是chroma下采样倍率
   if (chroma_format != de265_chroma_mono)
   {
     crop1D(residuals[1], left, top, chroma_stride, chroma_height_confwin, chroma_width_confwin);

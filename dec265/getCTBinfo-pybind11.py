@@ -91,7 +91,7 @@ def saveCTBinfo(img, saveList, idx):
             print(idx, "mv_f", mv_f[:, :, 2].max(), mv_f[:, :, 2].min(), mv_f.shape)
         np.save(f"npy/{idx}_mv_f.npy", mv_f)
     if "mv_b" in saveList:
-        mv_b = np.array(img.mv_b)[:,:,:2].clip(-128,127).astype('int8') # 因为大部分都是前一帧,所以默认是前一帧
+        mv_b = np.array(img.mv_b)[:,:,:2].clip(-128,127).astype('int8').transpose(1,0,2) # 因为大部分都是前一帧,所以默认是前一帧
         if DEBUG:
             print(idx, "mv_b", mv_b.max(), mv_b.min(), mv_b.shape)
         np.save(f"npy/{idx}_mv_b.npy", mv_b)
@@ -120,16 +120,14 @@ def saveCTBinfo(img, saveList, idx):
         np.save(f"npy/{idx}_decoded.npy", (predictions.astype('int32')+residuals.astype('int32')).clip(0,255).astype('uint8'))
         
 
-
-
     if "qp_y" in saveList:
-        quantPYs = np.array(img.quantPYs).clip(-128,127).astype('int8')
+        quantPYs = np.array(img.quantPYs).clip(-128,127).astype('int8').transpose(1,0)
         if DEBUG:
             print(idx, "quantPYs", quantPYs.max(), quantPYs.min(), quantPYs.mean(), quantPYs.shape)
         np.save(f"npy/{idx}quantPYs.npy", quantPYs)
 
-    # if idx == 1 and DEBUG:
-    #     exit()
+    if idx == 1 and DEBUG:
+        exit()
 
 def saveSliceType(img, slice_types):
     slice_types.append(img.slice_type)
@@ -151,7 +149,7 @@ def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h
 
 
 if __name__ == "__main__":
-    DEBUG = False
+    DEBUG = True
     # testOneTime()
     # testOneTimeSTLbind()
 
@@ -161,9 +159,9 @@ if __name__ == "__main__":
     # testOneTimeBindImgName()
 
     # testSeveralTimeBindImgName()
-    # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/girlshy.h265")
+    testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/girlshy.h265")
     # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/blackcar-123x235.bin")
-    testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/black_gray_ldp.bin")
+    # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/black_gray_ldp.bin")
     # testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/traffic.bin")
     # testSaveOneTimeBindImgName(filename="/data/chenminghui/CompUpSamplingDataset/Vimeo90k/sequences/00049/0311_23.bin")
     # testSaveOneTimeBindImgName(filename="/data/chenminghui/CompUpSamplingDataset/Vid4/BDx4_not_compressed/calendar_23.bin")
