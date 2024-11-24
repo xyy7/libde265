@@ -138,7 +138,7 @@ static int de265_image_get_buffer(de265_decoder_context *ctx,
   //ALLOC_ALIGNED_16: memalign((alignment), (size))
   p[0] = (uint8_t *)ALLOC_ALIGNED_16(luma_height * luma_bpl + MEMORY_PADDING); //没有使用memory padding
 
-  printf("residuals predictions Y:%d*%d,UV:%d*%d, lumastride:%d,luma_bitDepth:%d\n", luma_height, luma_bpl, chroma_height, chroma_bpl,luma_stride,img->BitDepth_Y);
+  // printf("residuals predictions Y:%d*%d,UV:%d*%d, lumastride:%d,luma_bitDepth:%d\n", luma_height, luma_bpl, chroma_height, chroma_bpl,luma_stride,img->BitDepth_Y);
   residuals[0] = std::vector<int32_t>(luma_height * luma_bpl);
   predictions[0] = std::vector<uint8_t>(luma_height * luma_bpl);
 
@@ -960,7 +960,7 @@ void de265_image::crop1D(std::vector<T> &vec, int left, int top, int pad_stride,
     // copy(vec.begin()+y * pad_stride, vec.begin()+y * pad_stride+real_width, tmp.begin()+y*real_width); //reserve似乎复制不过来
     tmp.insert(tmp.end(), vec.begin()+y * pad_stride, vec.begin()+y * pad_stride+real_width);
   }
-  printf("crop1D: result:%d,WxH:%d\n", tmp.size(), real_height * real_width);
+  // printf("crop1D: result:%d,WxH:%d\n", tmp.size(), real_height * real_width);
   // 恢复原来的大小
   vec.swap(tmp);
 }
@@ -974,7 +974,7 @@ void de265_image::crop2D(std::vector<std::vector<T>>& vec, int left, int top, in
     vec[i].erase(vec[i].begin(), vec[i].begin() + top);  //裁剪上边
     vec[i].erase(vec[i].begin()+real_height, vec[i].end()); //裁剪下边
   }
-  printf("crop2D:W=%lu,H=%lu\n", vec.size(), vec[0].size());
+  // printf("crop2D:W=%lu,H=%lu\n", vec.size(), vec[0].size());
 }
 
 #pragma optimize( "", off )
@@ -1056,10 +1056,10 @@ void de265_image::convert_info(){
   mv_b.resize(W, std::vector<std::array<int, 3>>(H));
   mv_f.resize(W, std::vector<std::array<int, 3>>(H));
   quantPYs.resize(W,std::vector<int>(H));
-  printf("cb_info: ");
-  cb_info.printMyself(); //cb_info: datasize:432, log2unitSize:4, width_in_units:24, height_in_units:18
-  printf("pb_info: ");
-  pb_info.printMyself(); //pb_info: datasize:6912, log2unitSize:2 width_in_units:96, height_in_units:72
+  // printf("cb_info: ");
+  // cb_info.printMyself(); //cb_info: datasize:432, log2unitSize:4, width_in_units:24, height_in_units:18
+  // printf("pb_info: ");
+  // pb_info.printMyself(); //pb_info: datasize:6912, log2unitSize:2 width_in_units:96, height_in_units:72
 
   for (int y0=0;y0<sps.PicHeightInMinCbsY;y0++)  //30*8 240  visualize.cc draw_tree_grid
     for (int x0=0;x0<sps.PicWidthInMinCbsY;x0++) //40*8 320

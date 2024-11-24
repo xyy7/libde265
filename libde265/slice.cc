@@ -4333,7 +4333,7 @@ void read_coding_unit(thread_context* tctx,
 
   if (cu_skip_flag) {
     tctx->img->decoded_residuals_num += (1 << log2CbSize)*(1<<log2CbSize);
-    printf("has residuals predictions cu_skip: %d\n", tctx->img->decoded_residuals_num);
+    // printf("has residuals predictions cu_skip: %d\n", tctx->img->decoded_residuals_num);
     read_prediction_unit_SKIP(tctx,x0,y0,nCbS,nCbS);
 
     img->set_PartMode(x0,y0, PART_2Nx2N); // need this for deblocking filter
@@ -4417,7 +4417,7 @@ void read_coding_unit(thread_context* tctx,
 
     if (cuPredMode == MODE_INTRA) {
       tctx->img->decoded_residuals_num += (1 << log2CbSize)*(1<<log2CbSize);
-      printf("has residuals predictions intra: %d\n", tctx->img->decoded_residuals_num);
+      // printf("has residuals predictions intra: %d\n", tctx->img->decoded_residuals_num);
 
       if (PartMode == PART_2Nx2N && sps.pcm_enabled_flag &&
           log2CbSize >= sps.Log2MinIpcmCbSizeY &&
@@ -4428,7 +4428,7 @@ void read_coding_unit(thread_context* tctx,
       if (pcm_flag) {
         img->set_pcm_flag(x0,y0,log2CbSize);
         tctx->img->decoded_residuals_num += (1 << log2CbSize)*(1<<log2CbSize);
-        printf("has residuals predictions: %d\n", tctx->img->decoded_residuals_num);
+        // printf("has residuals predictions: %d\n", tctx->img->decoded_residuals_num);
 
         read_pcm_samples(tctx, x0,y0, log2CbSize);
       }
@@ -4564,7 +4564,7 @@ void read_coding_unit(thread_context* tctx,
     }
     else { // INTER
       tctx->img->decoded_residuals_num += (1 << log2CbSize)*(1<<log2CbSize);
-      printf("has residuals predictions inter: %d\n", tctx->img->decoded_residuals_num);
+      // printf("has residuals predictions inter: %d\n", tctx->img->decoded_residuals_num);
       int nCS = 1<<log2CbSize;
 
       if (PartMode == PART_2Nx2N) {
