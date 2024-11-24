@@ -10,20 +10,9 @@
 ### Libde265  and Pybind11 install and compile.
 
 * ```
-  sudo apt-get update
-  sudo apt-get install automake
-  sudo apt-get install libtool
-  sudo apt-get install cmake gcc g++ qt4-qmake libqt4-dev
+  sudo apt-get install automake libtool libdpkg-perl
+  sudo apt-get install cmake gcc-7 g++-7 qt4-qmake libqt4-dev
   ```
-
-- Install [libvideogfx](http://github.com/farindk/libvideogfx).
-
-  - ```
-    git clone https://github.com/farindk/libvideogfx.git
-    cd libvideogfx/
-    ./autogen.sh
-    ./configure
-    ```
 
 * Configure libde265.
 
@@ -35,15 +24,15 @@
 * Install pybind11和python3.7-dev.
 
   * ```
-    pip install pybind11
-    sudo apt-get install python3.7-dev 
+    sudo apt-get install python3.7 python3.7-dev 
+    pip install "pybind11[global]"
     ```
 
-* Add python library to Makefile.
+* Add python library to dec265/Makefile.
 
   * ```
-    sed -i '/CXXFLAGS/s/$/ -fPIC ${shell /usr/bin/python3.7-config --cflags}' Makefile
-    sed -i '/LIBS/s/$/ -L/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu -lpython3.7' Makefile
+    -fPIC ${shell python3.7-config --cflags} //append after CXXFLAGS
+    -L/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu -lpython3.7  // append after LIBS
     ```
 
 * Compile dynamic library (*.so) for pybind11.

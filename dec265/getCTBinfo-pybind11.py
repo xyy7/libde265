@@ -27,13 +27,13 @@ def saveCTBinfo(img, saveList, idx):
             print(idx, "mv_b", mv_b.max(), mv_b.min(), mv_b.shape)
         np.save(f"npy/{idx}_mv_b.npy", mv_b)
     
-    if "qp_y" in saveList:
+    if "qp_y" in saveList: 
         quantPYs = np.array(img.quantPYs).clip(-128,127).astype('int8').transpose(1,0)
         if DEBUG:
             print(idx, "quantPYs", quantPYs.max(), quantPYs.min(), quantPYs.mean(), quantPYs.shape)
         np.save(f"npy/{idx}quantPYs.npy", quantPYs)
 
-    if "residual" in saveList:
+    if "residual" in saveList:   # 返回的是YUV格式
         if DEBUG:
             print("residual[0]/[1]/[2]:", len(img.residuals[0]), len(img.residuals[1]), len(img.residuals[2]))
         residuals = yuvToArray(
@@ -44,7 +44,7 @@ def saveCTBinfo(img, saveList, idx):
             print(idx, "residuals", residuals.max(), residuals.min(), residuals.mean(), residuals.shape)
         np.save(f"npy/{idx}_residuals.npy", residuals)
 
-    if "prediction" in saveList:
+    if "prediction" in saveList:  # 返回的是YUV格式
         predictions = yuvToArray(
             img.predictions, img.width_confwin == img.chroma_width_confwin and img.width_confwin == img.chroma_height_confwin, img.width_confwin, img.height_confwin
         )
@@ -63,7 +63,7 @@ def saveSliceType(img, slice_types):
     slice_types.append(img.slice_type)
 
 
-def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h265"):
+def testSaveOneTimeBindImgName(filename="../testdata/girlshy.h265"):
     imglist = dec265.VectorDe265ImagePointer()
     slice_types = []
     dec265.getCTBinfo(imglist, filename)
@@ -81,5 +81,5 @@ def testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/dec265/test.h
 
 if __name__ == "__main__":
     DEBUG = False
-    testSaveOneTimeBindImgName(filename="/data/chenminghui/test265/testdata/girlshy.h265")
+    testSaveOneTimeBindImgName(filename="../testdata/girlshy.h265")
    
