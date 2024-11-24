@@ -51,8 +51,8 @@ public:
   // int8_t  refIdx[2];    // index into RefPicList
   // MotionVector  mv[2];  // the absolute motion vectors
 
-  std::array<uint8_t, 2> predFlag={0,0}; // which of the two vectors is actually used
-  std::array<int8_t, 2> refIdx={0,0};    // index into RefPicList
+  std::array<uint8_t, 2> predFlag={0}; // which of the two vectors is actually used
+  std::array<int8_t, 2> refIdx={0};    // index into RefPicList
   std::array<MotionVector, 2> mv;  // the absolute motion vectors
 
   bool operator==(const PBMotion &) const;
