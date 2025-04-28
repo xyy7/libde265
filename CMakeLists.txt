@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.3.2)
+cmake_minimum_required (VERSION 3.5.0)
 
 project (libde265
     LANGUAGES C CXX
@@ -71,6 +71,6 @@ add_subdirectory (libde265)
 if (ENABLE_DECODER)
   add_subdirectory (dec265)
 endif()
-if (ENABLE_ENCODER)
-  add_subdirectory (enc265)
-endif()
+# if (ENABLE_ENCODER)
+#   add_subdirectory (enc265)
+# endif()

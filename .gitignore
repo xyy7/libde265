@@ -74,3 +74,4 @@ tools/gen-enc-table
 tools/rd-curves
 tools/tests
 tools/yuv-distortion
+.aider*
