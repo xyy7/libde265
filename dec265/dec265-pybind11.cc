@@ -623,8 +623,8 @@ void (*volatile __malloc_initialize_hook)(void) = init_my_hooks;
 // std::vector<de265_image*> getCTBinfo(std::vector<de265_image*> decodedImg)
 std::vector<de265_image*>& getCTBinfo(std::vector<de265_image*> &decodedImg, const char *filename = "/data/chenminghui/test265/testdata/girlshy.h265")
 {
-  int argc;
-  char **argv;
+  int argc=0;
+  char **argv=NULL;
 
 
   while (1)

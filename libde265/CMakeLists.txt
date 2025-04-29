@@ -10,7 +10,6 @@ set (libde265_sources
   deblock.cc
   decctx.cc
   dpb.cc
-  en265.cc
   fallback-dct.cc
   fallback-motion.cc 
   fallback.cc
@@ -49,7 +48,6 @@ set (libde265_headers
   deblock.h
   decctx.h
   dpb.h
-  en265.h
   fallback-dct.h
   fallback-motion.h
   fallback.h
@@ -78,7 +76,6 @@ set (libde265_headers
 
 set (libde265_public_headers
   de265.h
-  en265.h
   ${CMAKE_CURRENT_BINARY_DIR}/de265-version.h
 )
 
@@ -92,7 +89,7 @@ endif()
 
 add_definitions(-DLIBDE265_EXPORTS)
 
-add_subdirectory (encoder)
+# add_subdirectory (encoder)
 
 check_c_source_compiles(
   "#if !defined(__x86_64) && !defined(__i386__) \
@@ -121,7 +118,7 @@ if(HAVE_X86)
   endif()
 endif()
 
-add_library(de265 ${libde265_sources} ${libde265_public_headers} ${ENCODER_OBJECTS} ${X86_OBJECTS})
+add_library(de265 ${libde265_sources} ${libde265_public_headers} ${X86_OBJECTS})
 target_link_libraries(de265 PRIVATE Threads::Threads)
 target_include_directories(de265 PRIVATE ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
